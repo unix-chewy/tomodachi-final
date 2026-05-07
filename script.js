@@ -1,11 +1,12 @@
 // ===== 1. SPLASH SCREEN =====
 let bgMusic = null;
+let splashIntro = null;
 let currentIndex = 0;
 let lastScrollTime = 0;
 let isAnimating = false;
 let scrollVelocity = 0;
 let momentum = 0;
-const TOTAL_PROJECTS = 18; 
+const TOTAL_PROJECTS = 18;
 const VISIBLE_COUNT = 5;
 const CARD_HEIGHT = 73;
 const CONTAINER_HEIGHT = 450;
@@ -20,7 +21,7 @@ const avatarCycle = [
     { index: 16, src: 'assets/images/avatar_smile_left.png' },    // Projects 17-18
 ];
 
-// 16 Project Data
+// ===== 16 Project Data =====
 const allProjects = [
     { id: 'project1', title: 'Midterms Hands-on Exercise 1', arcana: '📊 Regression', file: 'projects/project1.html', color: '#ffb3ba' },
     { id: 'project2', title: 'Midterms Hands-on Exercise 2', arcana: '🧠 Neural Net', file: 'projects/project2.html', color: '#bae1ff' },
@@ -39,20 +40,82 @@ const allProjects = [
     { id: 'project15', title: 'Finals Lab Exercise 7', arcana: '🌐 Streamlit', file: 'projects/project15.html', color: '#baffc9' },
     { id: 'project16', title: 'Finals Lab Quiz 1', arcana: '😊 Sentiment', file: 'projects/project16.html', color: '#ffd93d' },
     { id: 'project17', title: 'Finals Lab Quiz 2', arcana: '😔 Sentiment', file: 'projects/project17.html', color: '#ffb3ba' },
-    { id: 'project18', title: 'Finals Hands-on Project', arcana: '	📱 Mobile AI', file: 'projects/project18.html', color: '#bae1ff' }
+    { id: 'project18', title: 'Finals Hands-on Project', arcana: '📱 Mobile AI', file: 'projects/project18.html', color: '#bae1ff' }
 ];
+
+// ===== CLICK TO START =====
+function startSplashSequence() {
+    // 1. Hide click overlay
+    const overlay = document.getElementById('click-overlay');
+    overlay.classList.add('hidden');
+
+    // 2. Show splash content
+    const content = document.getElementById('splash-content');
+    content.classList.add('visible');
+
+    // 3. Start intro music
+    playSplashIntro();
+}
+
+// ===== SPLASH INTRO MUSIC =====
+function playSplashIntro() {
+    splashIntro = new Audio('assets/music/splash_intro.mp3');
+    splashIntro.loop = false;
+    splashIntro.volume = 0.5;
+
+    splashIntro.play().catch(error => {
+        console.log('Splash intro play failed:', error);
+    });
+
+    // Listen for the 6-second mark (avatar and tag pop)
+    splashIntro.addEventListener('timeupdate', function() {
+        if (this.currentTime >= 6.0 && this.currentTime < 6.1) {
+            console.log('⏰ 6-second mark reached!');
+            const avatar = document.querySelector('.splash-avatar');
+            const tag = document.querySelector('.splash-tag');
+            if (avatar) {
+                avatar.style.animation = 'popFast 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards';
+                avatar.style.opacity = '1';
+            }
+            if (tag) {
+                tag.style.animation = 'popFast 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards';
+                tag.style.opacity = '1';
+            }
+        }
+    });
+
+    // Show START button at exactly 8 seconds
+    setTimeout(() => {
+        console.log('⏰ 8-second mark reached!');
+        const startBtn = document.querySelector('.start-btn');
+        if (startBtn) {
+            startBtn.style.opacity = '1';
+            startBtn.style.pointerEvents = 'auto';
+            startBtn.style.animation = 'fadeInUp 0.6s ease forwards';
+            console.log('✅ START button should now be visible');
+        } else {
+            console.error('❌ START button not found!');
+        }
+    }, 8000);
+
+    window.splashIntro = splashIntro;
+}
 
 function startSite() {
     const splash = document.getElementById('splash-screen');
     const main = document.getElementById('main-app');
-    
-    playBackgroundMusic();
+
     renderProjects();
-    
+
     splash.style.transform = 'translateY(-100vh)';
     setTimeout(() => {
         splash.style.display = 'none';
         main.style.display = 'block';
+        if (window.splashIntro && !window.splashIntro.paused) {
+            window.splashIntro.pause();
+            window.splashIntro.currentTime = 0;
+        }
+        playBackgroundMusic();
     }, 800);
 }
 
@@ -60,11 +123,11 @@ function playBackgroundMusic() {
     bgMusic = new Audio('assets/music/background.mp3');
     bgMusic.loop = true;
     bgMusic.volume = 0.3;
-    
+
     bgMusic.play().catch(error => {
         console.log('Audio play failed:', error);
     });
-    
+
     window.bgMusic = bgMusic;
 }
 
@@ -77,7 +140,7 @@ function toggleMusic() {
             mii.classList.remove('dance');
             void mii.offsetWidth;
             mii.classList.add('dance');
-            
+
             const bubble = document.getElementById('mii-speech');
             bubble.textContent = '"🎵 Music makes me dance!"';
             setTimeout(() => {
@@ -95,14 +158,14 @@ function toggleMusic() {
 function renderProjects() {
     const list = document.getElementById('project-list');
     list.innerHTML = '';
-    
+
     for (let i = 0; i < TOTAL_PROJECTS; i++) {
         const project = allProjects[i];
         const card = document.createElement('div');
         card.className = 'project-card';
         card.dataset.index = i;
         card.onclick = function() { openProject(project.file, project.title); };
-        
+
         card.innerHTML = `
             <div class="card-rank">
                 <span class="rank-number">${String(i + 1).padStart(2, '0')}</span>
@@ -114,36 +177,35 @@ function renderProjects() {
             </div>
             <span class="card-status">▶</span>
         `;
-        
+
         list.appendChild(card);
     }
-    
+
     updateWheelPosition(0, false);
     attachCardEvents();
 }
 
-// ===== 5. UPDATE WHEEL POSITION =====
 function updateWheelPosition(index, animate = true) {
     const list = document.getElementById('project-list');
     const cards = document.querySelectorAll('.project-card');
     const centerIndex = index + 2;
-    
+
     const targetPosition = (CONTAINER_HEIGHT / 2) - (centerIndex * CARD_HEIGHT) - (CARD_HEIGHT / 2);
-    
+
     if (animate) {
         list.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1)';
     } else {
         list.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
     }
-    
+
     list.style.transform = `translateY(${targetPosition}px)`;
-    
+
     cards.forEach((card, i) => {
         const distance = Math.abs(i - centerIndex);
         card.style.transition = 'all 0.4s cubic-bezier(0.22, 1, 0.36, 1)';
         card.className = 'project-card';
         card.style.borderColor = 'var(--text-dark)';
-        
+
         if (distance === 0) {
             card.classList.add('center');
             card.style.borderColor = 'var(--accent-pink)';
@@ -172,83 +234,82 @@ function updateWheelPosition(index, animate = true) {
             card.style.zIndex = '0';
         }
     });
-    
+
     // ===== SMOOTH 3-SPIN AVATAR CHANGE =====
     const mii = document.getElementById('main-mii');
-    
+
     let selectedAvatar = 'assets/images/avatar_smile_left.png';
     for (const entry of avatarCycle) {
         if (index >= entry.index) {
             selectedAvatar = entry.src;
         }
     }
-    
+
     if (mii.src !== selectedAvatar) {
         mii.style.transition = 'transform 1.2s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease';
         mii.style.transform = 'rotateY(1080deg) scale(0.85)';
         mii.style.opacity = '0.4';
-        
+
         setTimeout(() => {
             mii.src = selectedAvatar;
             mii.style.opacity = '1';
             mii.style.transform = 'rotateY(1080deg) scale(1)';
         }, 600);
-        
+
         setTimeout(() => {
             mii.style.transition = 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
             mii.style.transform = 'rotateY(1080deg) scale(1)';
         }, 1200);
-        
+
         setTimeout(() => {
             mii.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
             mii.style.transform = 'rotateY(1080deg) scale(1)';
         }, 1500);
-        
+
         mii.classList.add('changing');
         setTimeout(() => {
             mii.classList.remove('changing');
         }, 1500);
     }
-    
+
     const startNum = index + 1;
     const endNum = Math.min(index + VISIBLE_COUNT, TOTAL_PROJECTS);
     document.getElementById('project-counter').textContent = 
         `${String(startNum).padStart(2, '0')}-${String(endNum).padStart(2, '0')} / ${TOTAL_PROJECTS}`;
 }
 
-// ===== 6. CARD EVENTS =====
 function attachCardEvents() {
     document.querySelectorAll('.project-card').forEach(card => {
         card.removeEventListener('click', cardClickHandler);
         card.addEventListener('click', cardClickHandler);
-        
+
         card.addEventListener('mouseenter', function() {
             document.querySelectorAll('.project-card').forEach(c => {
                 c.classList.remove('center');
                 c.style.borderColor = 'var(--text-dark)';
                 c.style.transform = c.style.transform.replace(' scale(1.1)', '');
             });
-            
+
             this.classList.add('center');
             this.style.borderColor = 'var(--accent-pink)';
-            
+
             const mii = document.getElementById('main-mii');
             mii.classList.remove('wave');
             void mii.offsetWidth;
             mii.classList.add('wave');
-            
+
             const bubble = document.getElementById('mii-speech');
             const projectName = this.querySelector('.card-title').textContent;
             bubble.textContent = `"${projectName} is selected!"`;
         });
-        
+
         card.addEventListener('mouseleave', function() {
             this.classList.remove('center');
             this.style.borderColor = 'var(--text-dark)';
-            
+
             const mii = document.getElementById('main-mii');
             mii.classList.remove('wave');
-            
+
             setTimeout(() => {
                 const bubble = document.getElementById('mii-speech');
                 bubble.textContent = '"Pick a project!"';
@@ -265,27 +326,25 @@ function cardClickHandler() {
     }
 }
 
-// ===== 7. MOUSE WHEEL SCROLL =====
 document.addEventListener('wheel', function(e) {
     const mainApp = document.getElementById('main-app');
     if (mainApp.style.display === 'none') return;
-    
+
     e.preventDefault();
-    
+
     const now = Date.now();
     if (now - lastScrollTime < 50) return;
-    
+
     lastScrollTime = now;
-    
+
     const delta = e.deltaY > 0 ? 1 : -1;
     currentIndex = (currentIndex + delta + TOTAL_PROJECTS) % TOTAL_PROJECTS;
     updateWheelPosition(currentIndex, true);
     miiReact(delta > 0 ? 'down' : 'up');
-    
+
     scrollVelocity = delta * 0.5;
 }, { passive: false });
 
-// ===== 8. ARROW BUTTON SCROLL =====
 function scrollProjects(direction) {
     if (isAnimating) return;
     isAnimating = true;
@@ -297,13 +356,12 @@ function scrollProjects(direction) {
     }, 500);
 }
 
-// ===== 9. MII REACTIONS =====
 function miiReact(direction) {
     const mii = document.getElementById('main-mii');
     mii.classList.remove('wave');
     void mii.offsetWidth;
     mii.classList.add('wave');
-    
+
     const bubble = document.getElementById('mii-speech');
     bubble.textContent = direction === 'down' ? '"☀️ Here we go~"' : '"🌙 Going back~"';
     setTimeout(() => {
@@ -311,12 +369,11 @@ function miiReact(direction) {
     }, 1500);
 }
 
-// ===== 10. OPEN PROJECT =====
 async function openProject(htmlPath, title) {
     const slide = document.getElementById('project-slide');
     const slideTitle = document.getElementById('slide-title');
     const slideBody = document.querySelector('.slide-body');
-    
+
     const centerCard = document.querySelector('.project-card.center');
     if (centerCard) {
         centerCard.classList.add('clicked');
@@ -324,19 +381,19 @@ async function openProject(htmlPath, title) {
             centerCard.classList.remove('clicked');
         }, 400);
     }
-    
+
     const mii = document.getElementById('main-mii');
     mii.classList.remove('hop', 'excited');
     void mii.offsetWidth;
     mii.classList.add('hop');
-    
+
     const bubble = document.getElementById('mii-speech');
     bubble.textContent = `"Opening ${title}..."`;
-    
+
     try {
         const response = await fetch(htmlPath);
         const html = await response.text();
-        
+
         slideTitle.textContent = title;
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
@@ -344,7 +401,7 @@ async function openProject(htmlPath, title) {
         slideBody.innerHTML = bodyContent;
         slide.classList.add('open');
         document.body.style.overflow = 'hidden';
-        
+
         setTimeout(() => {
             mii.classList.remove('hop');
             mii.classList.add('excited');
@@ -361,7 +418,7 @@ function closeProject() {
     const slide = document.getElementById('project-slide');
     slide.classList.remove('open');
     document.body.style.overflow = 'hidden';
-    
+
     const mii = document.getElementById('main-mii');
     mii.classList.remove('excited');
     const bubble = document.getElementById('mii-speech');
@@ -370,7 +427,6 @@ function closeProject() {
     }, 500);
 }
 
-// ===== 11. KEYBOARD EVENTS =====
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') closeProject();
     if (event.key === 'ArrowUp') scrollProjects(-1);
@@ -385,21 +441,20 @@ document.getElementById('project-slide').addEventListener('click', function(e) {
     if (e.target === this) closeProject();
 });
 
-// ===== 12. MII MOUSE FOLLOW =====
 document.addEventListener('mousemove', function(e) {
     const mii = document.getElementById('main-mii');
     const rect = mii.getBoundingClientRect();
     const miiX = rect.left + rect.width / 2;
     const miiY = rect.top + rect.height / 2;
-    
+
     const angle = Math.atan2(e.clientY - miiY, e.clientX - miiX);
     const degrees = angle * (180 / Math.PI);
-    
+
     let limitedDegrees = Math.max(-15, Math.min(15, degrees * 0.15));
     mii.style.transform = `rotate(${limitedDegrees}deg)`;
 });
 
-// ===== 13. MOUSE TRACER - NO GSAP, PURE CSS =====
+// ===== MOUSE TRACER - NO GSAP, PURE CSS =====
 const cursor = document.getElementById("cursor");
 const amount = 20;
 const sineDots = Math.floor(amount * 0.3);
