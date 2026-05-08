@@ -469,9 +469,10 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding: 20px 0;
-    overflow-y: hidden;
-    gap: 10px;
+    padding: 20px 10px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 12px;
 }
 
 /* ===== MENU WRAPPER ===== */
@@ -1237,6 +1238,7 @@ body {
     
     .split-right {
         flex: 0 0 50%;
+        padding: 15px 10px;
     }
     
     .menu-wrapper {
@@ -1254,6 +1256,7 @@ body {
     .mii-drop-zone {
         min-width: 350px;
         min-height: 350px;
+        max-height: 350px;
     }
     
     .info-card-small {
@@ -1266,6 +1269,7 @@ body {
     
     .trash-bin {
         max-width: 300px;
+        margin: 8px auto 20px;
     }
 }
 
@@ -1278,26 +1282,27 @@ body {
     .split-container {
         flex-direction: column;
         height: auto;
-        padding: 20px;
-        gap: 20px;
+        padding: 15px;
+        gap: 15px;
         align-items: stretch;
     }
     
     .split-left {
         flex: none;
         width: 100%;
-        height: 50vh;
-        max-height: 50vh;
+        height: 45vh;
+        max-height: 45vh;
     }
     
     .split-right {
         flex: none;
         width: 100%;
         height: auto;
-        max-height: 100%;
+        max-height: calc(100vh - 60vh);
         overflow-y: auto;
-        padding: 15px 0;
-        gap: 8px;
+        -webkit-overflow-scrolling: touch;
+        padding: 10px;
+        gap: 12px;
     }
     
     .menu-wrapper {
@@ -1341,12 +1346,17 @@ body {
     }
     
     .large-mii {
-        width: 250px;
+        width: 85vw;
+        max-width: 250px;
     }
     
     .mii-drop-zone {
-        min-width: 250px;
+        min-width: 85vw;
+        max-width: 250px;
         min-height: 250px;
+        max-height: 250px;
+        margin: 0 auto;
+        flex-shrink: 0;
     }
     
     .mii-speech-bubble {
@@ -1357,8 +1367,11 @@ body {
     }
     
     .info-card-small {
-        max-width: 280px;
+        max-width: 100%;
+        width: 90%;
         padding: 8px 12px;
+        margin: 0 auto;
+        flex-shrink: 0;
     }
     
     .info-name {
@@ -1380,8 +1393,11 @@ body {
     }
     
     .face-paint-palette {
-        max-width: 280px;
+        max-width: 100%;
+        width: 90%;
         padding: 8px;
+        margin: 0 auto;
+        flex-shrink: 0;
     }
     
     .palette-label {
@@ -1400,9 +1416,12 @@ body {
     }
     
     .trash-bin {
-        max-width: 280px;
+        max-width: 100%;
+        width: 90%;
         height: 45px;
         gap: 6px;
+        margin: 8px auto 20px;
+        flex-shrink: 0;
     }
     
     .trash-bin span {
@@ -1417,12 +1436,18 @@ body {
 /* Small mobile (480px and down) */
 @media (max-width: 480px) {
     .split-container {
-        padding: 15px;
-        gap: 15px;
+        padding: 10px;
+        gap: 10px;
     }
     
     .split-left {
-        height: 45vh;
+        height: 40vh;
+    }
+    
+    .split-right {
+        max-height: calc(100vh - 55vh);
+        padding: 8px;
+        gap: 10px;
     }
     
     .menu-header .header-text {
@@ -1446,13 +1471,18 @@ body {
     }
     
     .large-mii {
-        width: 180px;
+        width: 80vw;
+        max-width: 180px;
     }
     
     .mii-drop-zone {
-        min-width: 180px;
+        min-width: 80vw;
+        max-width: 180px;
         min-height: 180px;
+        max-height: 180px;
         padding: 5px;
+        margin: 0 auto;
+        flex-shrink: 0;
     }
     
     .mii-speech-bubble {
@@ -1463,9 +1493,12 @@ body {
     }
     
     .info-card-small {
-        max-width: 240px;
+        max-width: 100%;
+        width: 90%;
         padding: 6px 10px;
         border-radius: 10px;
+        margin: 0 auto;
+        flex-shrink: 0;
     }
     
     .info-name {
@@ -1486,8 +1519,11 @@ body {
     }
     
     .face-paint-palette {
-        max-width: 240px;
+        max-width: 100%;
+        width: 90%;
         padding: 6px;
+        margin: 0 auto;
+        flex-shrink: 0;
     }
     
     .palette-label {
@@ -1506,9 +1542,12 @@ body {
     }
     
     .trash-bin {
-        max-width: 240px;
+        max-width: 100%;
+        width: 90%;
         height: 40px;
         gap: 4px;
+        margin: 8px auto 15px;
+        flex-shrink: 0;
     }
     
     .trash-bin span {
@@ -1596,34 +1635,7 @@ body {
     }
 }
 
-/* ===== SPLIT LAYOUT ===== */
-.split-container {
-    display: flex;
-    height: 100vh;
-    padding: 40px 60px;
-    gap: 40px;
-    align-items: center;
-}
 
-.split-left {
-    flex: 0 0 55%;
-    height: 80vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.split-right {
-    flex: 0 0 45%;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 20px 0;
-    overflow-y: hidden; /* prevent scrolling */
-    gap: 10px;
-}
 
 /* ===== SMALL INFO CARD ===== */
 .info-card-small {
