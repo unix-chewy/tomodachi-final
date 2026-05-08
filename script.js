@@ -224,20 +224,35 @@ function renderProjects() {
 function updateWheelPosition(index, animate = true) {
     const list = document.getElementById('project-list');
     const cards = document.querySelectorAll('.project-card');
-    const centerIndex = index + 2;
-
-    const targetPosition = (CONTAINER_HEIGHT / 2) - (centerIndex * CARD_HEIGHT) - (CARD_HEIGHT / 2);
-
+    const listContainer = document.querySelector('.menu-list-container');
+    
+    // Get the container height
+    const containerHeight = listContainer.clientHeight || CONTAINER_HEIGHT;
+    
+    // Calculate the center position of the container
+    const centerPosition = containerHeight / 2;
+    
+    // Calculate the position of the selected card offset
+    // We want the selected card to be at the center of the container
+    const selectedCardHeight = CARD_HEIGHT;
+    const gap = 12; // gap between cards
+    const totalCardHeight = selectedCardHeight + gap;
+    
+    // The target position puts the selected card at the center
+    const targetPosition = centerPosition - (selectedCardHeight / 2) - (index * totalCardHeight);
+    
+    // Apply the transform
     if (animate) {
         list.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1)';
     } else {
         list.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
     }
-
+    
     list.style.transform = `translateY(${targetPosition}px)`;
-
+    
+    // Update card styles (same as before)
     cards.forEach((card, i) => {
-        const distance = Math.abs(i - centerIndex);
+        const distance = Math.abs(i - index);
         card.style.transition = 'all 0.4s cubic-bezier(0.22, 1, 0.36, 1)';
         card.className = 'project-card';
         card.style.borderColor = 'var(--text-dark)';
@@ -271,6 +286,7 @@ function updateWheelPosition(index, animate = true) {
         }
     });
 
+    // Update counter
     const startNum = index + 1;
     const endNum = Math.min(index + VISIBLE_COUNT, TOTAL_PROJECTS);
     document.getElementById('project-counter').textContent = 
