@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+    <div class="slide-section">
+        <h3>📖 Project Overview</h3>
+        <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-top: 10px; margin-bottom: 10px;">Dogs vs. Cats Classifier</h4>
+        <p><strong>Brief Description:</strong> This project implements a Convolutional Neural Network (CNN) to classify images as either a dog or a cat. The model was trained on a dataset of dog and cat images and achieves accurate binary classification.</p>
+        <p><strong>Objectives / Purpose:</strong> The primary objective is to test the trained Dogs vs. Cats binary classifier on two external images (one dog, one cat), correctly classify both, and capture screenshots of the prediction outputs.</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>✨ Key Features</h3>
+        <ul>
+            <li><strong>Binary Classification:</strong> Model outputs probability between 0 (dog) and 1 (cat).</li>
+            <li><strong>CNN Architecture:</strong> 3 convolutional layers (32, 64, 128 filters) with BatchNormalization and Dropout.</li>
+            <li><strong>Activation Function:</strong> Sigmoid output layer for binary classification.</li>
+            <li><strong>Preprocessing:</strong> Images resized to 128x128, normalized to [0,1].</li>
+            <li><strong>TensorFlow Lite Export:</strong> Model converted to .tflite format for mobile deployment.</li>
+            <li><strong>Flask Deployment Ready:</strong> Model saved and prepared for integration with Flask web framework.</li>
+        </ul>
+    </div>
+
+    <div class="slide-section">
+        <h3>💻 Important Code Blocks</h3>
+        
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">1. CNN Model Architecture</h4>
+            <p style="margin-bottom: 10px; font-size: 0.9rem;">3 convolutional layers with BatchNormalization, MaxPooling, and Dropout for regularization.</p>
+            <pre><code>
+model = Sequential()
+model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(128, 128, 3)))
+model.add(BatchNormalization())
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(BatchNormalization())
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+
+model.add(Conv2D(128, (3, 3), activation='relu'))
+model.add(BatchNormalization())
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+
+model.add(Flatten())
+model.add(Dense(512, activation='relu'))
+model.add(BatchNormalization())
+model.add(Dropout(0.5))
+model.add(Dense(1, activation='sigmoid'))
+
+model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
+model.load_weights("/content/model.h5")
+            </code></pre>
+        </div>
+
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">2. Prediction Function</h4>
+            <p style="margin-bottom: 10px; font-size: 0.9rem;">Loads and preprocesses an image, then returns the prediction score.</p>
+            <pre><code>
+def get_prediction(test_img):
+    test_img = test_img.resize((128, 128), resample=PIL.Image.BICUBIC)
+    test_arr = img_to_array(test_img)
+    test_arr = np.expand_dims(test_arr, axis=0)
+    test_arr /= 255.0
+    return float(model.predict(test_arr))
+
+score = get_prediction(test_img)
+if score < 0.5:
+    print("It's a dog!")
+else:
+    print("It's a cat!")
+            </code></pre>
+        </div>
+
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">3. TensorFlow Lite Export (Optional)</h4>
+            <pre><code>
+converter = tf.lite.TFLiteConverter.from_keras_model(model)
+tflite_model = converter.convert()
+with open('model.tflite', 'wb') as f:
+    f.write(tflite_model)
+            </code></pre>
+        </div>
+    </div>
+
+    <div class="slide-section">
+        <h3>📸 Screenshots / Visuals</h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 15px;">
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark);">
+                <img src="assets/images/project_screenshots/project13/dog_predicted.jpg" alt="Dog Prediction Screenshot" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;"><strong>Dog Prediction:</strong> Model correctly identifies a dog </p>
+            </div>
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark);">
+                <img src="assets/images/project_screenshots/project13/cat_predicted.jpg" alt="Cat Prediction Screenshot" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;"><strong>Cat Prediction:</strong> Model correctly identifies a cat </p>
+            </div>
+        </div>
+        <p style="margin-top: 15px; font-size: 0.85rem; text-align: center; font-style: italic;">Screenshots show both a dog and a cat image correctly classified by the model. This model will be deployed using Flask in the next phase.</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>🛠️ Tools & Technologies</h3>
+        <ul>
+            <li><strong>Programming Language:</strong> Python 3.x</li>
+            <li><strong>Development Environment:</strong> Google Colab</li>
+            <li><strong>Deep Learning:</strong> TensorFlow / Keras (Sequential, Conv2D, MaxPooling2D, Dropout, BatchNormalization)</li>
+            <li><strong>Image Processing:</strong> PIL, Keras preprocessing (load_img, img_to_array)</li>
+            <li><strong>Mobile Deployment:</strong> TensorFlow Lite (.tflite)</li>
+            <li><strong>Future Deployment:</strong> Flask (web framework for upcoming activity)</li>
+        </ul>
+    </div>
+
+    <div class="slide-section">
+        <h3>🧩 Challenges & Solutions</h3>
+        <p><strong>Challenge 1:</strong> Model outputs a probability score; interpretation needed for user-friendly output.</p>
+        <p><strong>Solution:</strong> Used threshold 0.5: score &lt; 0.5 = dog, score &gt; 0.5 = cat.</p>
+        
+        <p><strong>Challenge 2:</strong> Model weights needed to be loaded separately from architecture.</p>
+        <p><strong>Solution:</strong> Used model.load_weights() to load pre-trained weights from model.h5 file.</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>🧠 Learning Reflection</h3>
+        <p><strong>What I learned:</strong> This project taught me how to build a binary image classifier from scratch. Key concepts included using sigmoid activation for binary output, BatchNormalization for stabilizing training, and Dropout for preventing overfitting. I also learned how to handle image preprocessing (resizing, normalization) and save/load model weights for future use.</p>
+        <p><strong>Skills gained:</strong> Building CNNs for binary classification, implementing BatchNormalization layers, loading pre-trained weights, creating prediction pipelines for custom images, and preparing models for Flask deployment.</p>
+        <p><strong>Next Steps (Lab Exercise 6):</strong> This model will be integrated with a Flask web application, allowing users to upload images through a browser and receive real-time dog/cat predictions.</p>
+    </div>
+</body>
+</html>

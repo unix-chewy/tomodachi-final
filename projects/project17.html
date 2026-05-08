@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+    <div class="slide-section">
+        <h3>📖 Project Overview</h3>
+        <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-top: 10px; margin-bottom: 10px;">Finals - Lab Quiz 2: Sentiment Analysis - NEGATIVE</h4>
+        <p><strong>Brief Description:</strong> This is a continuation of <strong>Finals - Lab Quiz 1 (Sentiment Analysis - POSITIVE)</strong>, using the same LSTM-based RNN model deployed on Anvil. The web app takes user input text and returns either POSITIVE or NEGATIVE sentiment classification.</p>
+        <p><strong>Objectives / Purpose:</strong> Demonstrate the sentiment analysis web app correctly identifying a NEGATIVE sentiment from user input.</p>
+        <p><strong>Context Note:</strong> This uses the same model and Anvil deployment from Lab Quiz 1. The model was trained on the IMDB dataset and achieves reliable sentiment classification for both positive and negative reviews.</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>✨ Key Features</h3>
+        <ul>
+            <li><strong>LSTM-based RNN:</strong> Captures sequential dependencies in text.</li>
+            <li><strong>Anvil Web App:</strong> Simple text input interface for sentiment prediction.</li>
+            <li><strong>Real-time Classification:</strong> Instant POSITIVE/NEGATIVE output.</li>
+            <li><strong>Negative Sentiment Detection:</strong> Model correctly identifies negative movie reviews.</li>
+        </ul>
+    </div>
+
+    <div class="slide-section">
+        <h3>💻 Code Reference</h3>
+        <p style="margin-bottom: 10px; font-size: 0.9rem;">The model architecture and Anvil deployment code are identical to <strong>Finals - Lab Quiz 1</strong>. Below is the prediction function used:</p>
+        <pre><code>
+@anvil.server.callable
+def predict_sentiment(input_text):
+    word_to_index = imdb.get_word_index()
+    input_sequence = [word_to_index.get(word.lower(), 0) + 3 for word in input_text.split()]
+    input_data = sequence.pad_sequences([input_sequence], maxlen=100)
+    predicted_sentiment = model.predict(input_data)[0][0]
+    return 'Positive' if predicted_sentiment > 0.5 else 'Negative'
+        </code></pre>
+    </div>
+
+    <div class="slide-section">
+        <h3>📸 Screenshot / Visuals</h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 15px;">
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark);">
+                <img src="assets/images/project_screenshots/project17/negative.png" alt="Negative Sentiment Prediction" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;"><strong>NEGATIVE Sentiment:</strong> App correctly identifies negative movie review</p>
+            </div>
+        </div>
+        <p style="margin-top: 15px; font-size: 0.85rem; text-align: center; font-style: italic;">Screenshot shows Anvil web app with negative sentiment prediction output.</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>🛠️ Tools & Technologies</h3>
+        <ul>
+            <li><strong>Deep Learning:</strong> TensorFlow / Keras (LSTM, Embedding)</li>
+            <li><strong>Deployment Platform:</strong> Anvil.works</li>
+            <li><strong>Dataset:</strong> IMDB Reviews (training basis)</li>
+        </ul>
+    </div>
+
+    <div class="slide-section">
+        <h3>🧠 Learning Reflection</h3>
+        <p><strong>What I learned:</strong> This quiz confirms that the LSTM model generalizes well to both positive and negative sentiments. The model's ability to correctly classify "Absolute waste of time..." as NEGATIVE demonstrates its practical utility for real-world sentiment analysis tasks.</p>
+        <p><strong>Skills gained:</strong> Testing deployed models with different input types, interpreting sentiment predictions, and documenting results for both positive and negative cases.</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+    <div class="slide-section">
+        <h3>📖 Project Overview</h3>
+        <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-top: 10px; margin-bottom: 10px;">Flask Web App Dogs vs. Cats Classifier</h4>
+        <p><strong>Brief Description:</strong> This project deploys the trained Dogs vs. Cats CNN model as a web application using Flask, a lightweight Python web framework. Users can upload images of dogs or cats through a browser interface and receive real-time classification results.</p>
+        <p><strong>Objectives / Purpose:</strong> Deploy the pre-trained binary classification model to a Flask web app, allowing users to upload images and get predictions (dog or cat) with confidence scores and to upload 5 screenshots from the web output.</p>
+        <p><strong>Context Note:</strong> This is the deployment phase of <strong>Finals - Lab Exercise 5 (Dogs vs. Cats Classifier)</strong>, where the trained CNN model is integrated with a Flask backend to create a fully functional web application.</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>✨ Key Features</h3>
+        <ul>
+            <li><strong>Flask Web Framework:</strong> Lightweight backend for handling image uploads and predictions.</li>
+            <li><strong>Image Upload Interface:</strong> Users can select and upload images through a simple web form.</li>
+            <li><strong>Real-time Classification:</strong> Model predicts dog or cat instantly upon upload.</li>
+            <li><strong>Confidence Score Display:</strong> Shows prediction probability alongside the result.</li>
+            <li><strong>Responsive Output:</strong> Displays uploaded image and classification result side by side.</li>
+        </ul>
+    </div>
+
+    <div class="slide-section">
+        <h3>💻 Important Code Blocks</h3>
+        
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">Flask App Backend (app.py)</h4>
+            <p style="margin-bottom: 10px; font-size: 0.9rem;">Main Flask application handling file uploads, preprocessing, and predictions.</p>
+            <pre><code>
+from flask import Flask, request, render_template
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing.image import load_img, img_to_array
+import numpy as np
+import os
+
+app = Flask(__name__)
+model = load_model('dogs_vs_cats_model.h5')
+
+def preprocess_image(image_path):
+    img = load_img(image_path, target_size=(128, 128))
+    img_array = img_to_array(img)
+    img_array = np.expand_dims(img_array, axis=0)
+    img_array /= 255.0
+    return img_array
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        file = request.files['file']
+        if file:
+            filepath = os.path.join('uploads', file.filename)
+            file.save(filepath)
+            img_array = preprocess_image(filepath)
+            prediction = model.predict(img_array)[0][0]
+            result = 'Dog' if prediction < 0.5 else 'Cat'
+            confidence = prediction if prediction > 0.5 else 1 - prediction
+            return render_template('result.html', result=result, 
+                                   confidence=confidence * 100, 
+                                   image_path=filepath)
+    return render_template('index.html')
+
+if __name__ == '__main__':
+    app.run(debug=True)
+            </code></pre>
+        </div>
+
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">HTML Template (index.html)</h4>
+            <pre><code>
+&lt;form method="POST" enctype="multipart/form-data"&gt;
+    &lt;input type="file" name="file" accept="image/*" required&gt;
+    &lt;button type="submit"&gt;Predict&lt;/button&gt;
+&lt;/form&gt;
+            </code></pre>
+        </div>
+    </div>
+
+    <div class="slide-section">
+        <h3>📸 Screenshots / Visuals</h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 15px;">
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark);">
+                <img src="assets/images/project_screenshots/project14/Dogs.png" alt="Flask Web App Prediction 1" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;"><strong>Screenshot 1:</strong> Flask web app showing predictions of 3 dogs</p>
+            </div>
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark);">
+                <img src="assets/images/project_screenshots/project14/Cats.png" alt="Flask Web App Prediction 2" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;"><strong>Screenshot 2:</strong> Flask web app showing predictions of 3 dogs</p>
+            </div>
+        </div>
+        <p style="margin-top: 15px; font-size: 0.85rem; text-align: center; font-style: italic;">Screenshots show the Flask web app interface with multiple dog and cat predictions.</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>🛠️ Tools & Technologies</h3>
+        <ul>
+            <li><strong>Web Framework:</strong> Flask (Python)</li>
+            <li><strong>Deep Learning Model:</strong> TensorFlow / Keras CNN (from Lab Exercise 5)</li>
+            <li><strong>Frontend:</strong> HTML, CSS (basic templates)</li>
+            <li><strong>Image Processing:</strong> Pillow, Keras preprocessing</li>
+            <li><strong>Deployment:</strong> Local Flask server</li>
+        </ul>
+    </div>
+
+    <div class="slide-section">
+        <h3>🧩 Challenges & Solutions</h3>
+        <p><strong>Challenge:</strong> Ensuring the Flask app correctly loads the trained model and processes uploaded images.</p>
+        <p><strong>Solution:</strong> Saved the model as .h5 file and loaded it at app startup. Preprocessed images using same resize (128x128) and normalization as training.</p>
+        
+        <p><strong>Second Challenge:</strong> Displaying results in a user-friendly way.</p>
+        <p><strong>Solution:</strong> Rendered separate result template showing uploaded image, prediction (Dog/Cat), and confidence percentage.</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>🧠 Learning Reflection</h3>
+        <p><strong>What I learned:</strong> This deployment exercise taught me how to take a trained deep learning model and integrate it with a Flask web application. Key concepts included handling file uploads, preprocessing images server-side, rendering dynamic templates, and returning predictions to the user interface.</p>
+        <p><strong>Skills gained:</strong> Building Flask routes for GET/POST requests, processing uploaded files, loading Keras models in a web environment, creating HTML templates, and displaying images with prediction results.</p>
+    </div>
+</body>
+</html>

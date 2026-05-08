@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+    <div class="slide-section">
+        <h3>📖 Project Overview</h3>
+        <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-top: 10px; margin-bottom: 10px;">Linear Regression Using Neural Network - Plant Growth</h4>
+        <p><strong>Brief Description:</strong> This project implements a Multi-layer Perceptron (MLP) Neural Network to model the non-linear relationship between temperature and plant growth. Unlike standard linear models, this neural network is designed to capture the quadratic nature of biological growth patterns, providing significantly more accurate predictions across the entire temperature spectrum.</p>
+        <p><strong>Objectives / Purpose:</strong> The primary objective is show the Linear Regression given the notebook and document the completed project notebook into a PDF report. This includes organizing all code implementations, visualizations, and analytical findings into a single, well-formatted document suitable for submission, review, and future reference.</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>✨ Key Features</h3>
+        <ul>
+            <li><strong>MLP Architecture:</strong> Features a dual hidden layer structure (50, 50) using the ReLU activation function to process complex data patterns.</li>
+            <li><strong>Automated Pipeline:</strong> Implements an Scikit-learn <code>Pipeline</code> that integrates <code>StandardScaler</code> to ensure input features are normalized before reaching the neural network.</li>
+            <li><strong>High-Iteration Training:</strong> Configured with the 'adam' solver and a maximum of 5,000 iterations to ensure optimal weight convergence.</li>
+            <li><strong>Non-Linear Fitting:</strong> Successfully models a quadratic growth curve: $growth = -0.1 \times (temp - 25)^2 + 50$, even with added Gaussian noise.</li>
+        </ul>
+    </div>
+
+    <div class="slide-section">
+        <h3>💻 Important Code Blocks</h3>
+        
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">1. Neural Network Pipeline</h4>
+            <p style="margin-bottom: 10px; font-size: 0.9rem;">This pipeline ensures that data is scaled and then passed into an MLPRegressor with two hidden layers of 50 neurons each.</p>
+            <pre><code>
+model = Pipeline([
+    ("Scaler", StandardScaler()),
+    ("nn", MLPRegressor(
+        hidden_layer_sizes=(50,50),
+        activation="relu",
+        solver="adam",
+        max_iter=5000,
+        random_state=42
+    ))
+])
+            </code></pre>
+        </div>
+
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">2. Performance Metrics Calculation</h4>
+            <p style="margin-bottom: 10px; font-size: 0.9rem;">The project calculates MAE, MSE, and R² Score to quantitatively verify the model's accuracy.</p>
+            <pre><code>
+mae = mean_absolute_error(growth, growth_pred)
+mse = mean_squared_error(growth, growth_pred)
+rmse = np.sqrt(mse)
+r2 = r2_score(y, growth_pred)
+            </code></pre>
+        </div>
+    </div>
+
+    <div class="slide-section">
+        <h3>📸 Regression Analysis & Visuals</h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 15px;">
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark);">
+                <img src="assets/images/project_screenshots/project2/visualization.png" alt="Neural Network Prediction Curve" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;">Neural Network Prediction vs. True Growth Data</p>
+            </div>
+            
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 15px;">
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark);">
+                <img src="assets/images/project_screenshots/project2/metrics.jpg" alt="Metrics" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;">Model Performance Metrics</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-section">
+        <h3>🛠️ Tools & Technologies</h3>
+        <ul>
+            <li><strong>Core Language:</strong> Python 3.x</li>
+            <li><strong>Neural Networks:</strong> Scikit-learn <code>MLPRegressor</code></li>
+            <li><strong>Data Pipeline:</strong> <code>StandardScaler</code> and <code>Pipeline</code> modules</li>
+            <li><strong>Visualization:</strong> Matplotlib (Scatter and Plot functions)</li>
+        </ul>
+    </div>
+
+    <div class="slide-section">
+        <h3>🧩 Challenges & Solutions</h3>
+        <p><strong>Challenge:</strong> Neural Networks are sensitive to the scale of input features (0-40°C), which can lead to slow convergence.</p>
+        <p><strong>Solution:</strong> Wrapped the model in a <code>StandardScaler</code> pipeline to automatically normalize the temperature data before training.</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>🧠 Learning Reflection</h3>
+        <p><strong>Skills gained:</strong> Constructing multi-layer perceptrons, implementing machine learning pipelines, and understanding the limitations of linear models when faced with biological (quadratic) data.</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+    <div class="slide-section">
+        <h3>📖 Project Overview</h3>
+        <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-top: 10px; margin-bottom: 10px;">Iris Classification: k-NN vs. MLP Model Selection</h4>
+        <p><strong>Brief Description:</strong> This project compares two classification algorithms — k-Nearest Neighbors (k-NN) and Multi-Layer Perceptron (MLP) Neural Network — on the Iris dataset. Both models were evaluated using accuracy, precision, recall, F1-score, and confusion matrices to determine which performs better for flower species prediction.</p>
+        <p><strong>Objectives / Purpose:</strong> The primary objective is to conduct a comparative analysis between k-Nearest Neighbors (k-NN) and Multi-Layer Perceptron (MLP) neural network classifiers on the Iris dataset, then document the evaluation metrics (accuracy, precision, recall, F1-score) and interpretation in a PDF report for submission.</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>✨ Key Features</h3>
+        <ul>
+            <li><strong>Dual Model Implementation:</strong> Both k-NN and MLP classifiers trained on the same Iris dataset.</li>
+            <li><strong>Balanced vs. Imbalanced Testing:</strong> MLP used stratified split (balanced classes: 10,10,10); k-NN used random split (imbalanced: 16,5,9).</li>
+            <li><strong>Comprehensive Metrics:</strong> Accuracy, confusion matrix, precision, recall, F1-score, and support values for both models.</li>
+            <li><strong>MLP Configuration:</strong> Single hidden layer with 10 neurons, ReLU activation, Adam solver, 500 max iterations.</li>
+            <li><strong>Comparative Analysis:</strong> Side-by-side interpretation highlighting Class 1 performance differences.</li>
+        </ul>
+    </div>
+
+    <div class="slide-section">
+        <h3>💻 Important Code Blocks</h3>
+        
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">1. MLP Neural Network Model</h4>
+            <p style="margin-bottom: 10px; font-size: 0.9rem;">Initializes a Multi-Layer Perceptron with one hidden layer (10 neurons), ReLU activation, and Adam optimizer.</p>
+            <pre><code>
+mlp = MLPClassifier(
+    hidden_layer_sizes=(10,),
+    activation='relu',
+    solver='adam',
+    max_iter=500,
+    random_state=42
+)
+mlp.fit(X_train, y_train)
+y_pred = mlp.predict(X_test)
+            </code></pre>
+        </div>
+
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">2. Stratified Train-Test Split</h4>
+            <p style="margin-bottom: 10px; font-size: 0.9rem;">Ensures balanced class distribution in both training and testing sets — critical for fair model evaluation.</p>
+            <pre><code>
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+            </code></pre>
+        </div>
+
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">3. Evaluation Metrics</h4>
+            <p style="margin-bottom: 10px; font-size: 0.9rem;">Prints accuracy, confusion matrix, and classification report for both models.</p>
+            <pre><code>
+print('Accuracy:', accuracy_score(y_test, y_pred))
+print('Confusion Matrix:\n', confusion_matrix(y_test, y_pred))
+print('Classification Report:\n', classification_report(y_test, y_pred))
+            </code></pre>
+        </div>
+    </div>
+
+    <div class="slide-section">
+        <h3>📸 Screenshots / Visuals</h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 15px;">
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark);">
+                <img src="assets/images/project_screenshots/project5/knn.jpg" alt="k-NN Model Results" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;">k-NN Model: Accuracy 96.7%, Confusion Matrix, Classification Report</p>
+            </div>
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark);">
+                <img src="assets/images/project_screenshots/project5/mlp.jpg" alt="MLP Model Results" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;">MLP Model: Accuracy 96.7%, Confusion Matrix, Classification Report</p>
+            </div>
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark);">
+                <img src="assets/images/project_screenshots/project5/comparison.jpg" alt="Model Comparison Summary" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;">MLP vs. k-NN: Accuracy, Precision, Recall, F1-Score Comparison</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-section">
+        <h3>🛠️ Tools & Technologies</h3>
+        <ul>
+            <li><strong>Programming Language:</strong> Python 3.x</li>
+            <li><strong>Development Environment:</strong> Google Colab</li>
+            <li><strong>Libraries:</strong> Scikit-learn (MLPClassifier, KNeighborsClassifier, train_test_split, accuracy_score, confusion_matrix, classification_report), Matplotlib</li>
+            <li><strong>Dataset:</strong> Iris dataset (built into Scikit-learn)</li>
+            <li><strong>AI Assistant:</strong> DeepSeek for model comparison interpretation</li>
+        </ul>
+    </div>
+
+    <div class="slide-section">
+        <h3>🧩 Challenges & Solutions</h3>
+        <p><strong>Challenge:</strong> The k-NN test set had imbalanced class distribution (16, 5, 9) while MLP used stratified split (10,10,10), making direct comparison difficult.</p>
+        <p><strong>Solution:</strong> Focused comparison on proportional metrics (precision, recall, F1-score) rather than raw support values. For Class 1, MLP had recall 0.90 (missed 1 of 10) while k-NN had 0.80 (missed 1 of 5, but worse proportionally).</p>
+        <p><strong>Second Challenge:</strong> Deciding which metric matters most for model selection.</p>
+        <p><strong>Solution:</strong> Prioritized F1-score for the weakest class and recall for minority class. MLP achieved 0.95 vs 0.89 for Class 1, making it objectively better despite equal accuracy scores.</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>🧠 Learning Reflection</h3>
+        <p><strong>What I learned:</strong> Accuracy alone is insufficient for model comparison — precision, recall, and F1-score reveal deeper performance differences, especially on imbalanced data. I also learned that stratified splitting ensures fair evaluation across classes, and that MLP neural networks can better handle complex patterns despite requiring more tuning.</p>
+        <p><strong>Skills gained:</strong> Model comparison methodology, interpretation of confusion matrices and classification reports, hyperparameter tuning awareness (hidden layer size, activation, solver for MLP), and practical recommendation formulation based on constraints.</p>
+        <p><em>Reference: DeepSeek (2025). Machine learning model comparison between MLP and k-NN algorithms.</em></p>
+    </div>
+</body>
+</html>

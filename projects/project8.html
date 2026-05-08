@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+    <div class="slide-section">
+        <h3>📖 Project Overview</h3>
+        <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-top: 10px; margin-bottom: 10px;">Improving Your Boston Housing Price Prediction Model</h4>
+        <p><strong>Brief Description:</strong> This project explores techniques to improve the Boston House Price Prediction Neural Network by implementing Early Stopping (to prevent overfitting) and adding an additional hidden layer (to increase model capacity). Three models were trained, evaluated, and compared to identify the best-performing architecture.</p>
+        <p><strong>Objectives / Purpose:</strong> Compare three models — Original, Original + Early Stopping, and Early Stopping + Additional Hidden Layer — using MAE, MSE, RMSE, and R² metrics. Select the best model and update the Anvil web app for improved predictions.</p>
+        <p><strong>Context Note:</strong> This project has two prerequisites: <strong>Midterm - Hands-on Long Quiz 1 (Boston House Price Prediction)</strong> where the baseline Neural Network model was originally developed and trained, and <strong>Midterm - Hands-on Quiz 1 (House Price Prediction)</strong> where the model was deployed as a functional web app using Anvil.works. This current project builds upon both by applying model improvement techniques and updating the deployed web app with the best-performing model.</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>✨ Key Features</h3>
+        <ul>
+            <li><strong>Three Model Comparison:</strong> Systematic evaluation of architectural changes.</li>
+            <li><strong>Early Stopping Implementation:</strong> Patience=10, monitor='val_loss', restore_best_weights=True.</li>
+            <li><strong>Additional Hidden Layer:</strong> Architecture: 32 → 16 → 1 (compared to original 16 → 8 → 1).</li>
+            <li><strong>Evaluation Metrics:</strong> MAE, MSE, RMSE, R² for all three models.</li>
+            <li><strong>Updated Anvil Deployment:</strong> Best model deployed to existing web app with 3 test predictions (High, Mid, Low value areas).</li>
+        </ul>
+    </div>
+
+    <div class="slide-section">
+        <h3>💻 Important Code Blocks</h3>
+        
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">1. Early Stopping Callback</h4>
+            <p style="margin-bottom: 10px; font-size: 0.9rem;">Stops training when validation loss stops improving for 10 epochs, restoring best weights to prevent overfitting.</p>
+            <pre><code>
+from tensorflow.keras.callbacks import EarlyStopping
+
+early_stop = EarlyStopping(
+    monitor='val_loss',
+    patience=10,
+    restore_best_weights=True
+)
+
+history = model.fit(
+    X_train, y_train,
+    epochs=300,
+    validation_split=0.2,
+    callbacks=[early_stop]
+)
+            </code></pre>
+        </div>
+
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">2. Model with Additional Hidden Layer</h4>
+            <p style="margin-bottom: 10px; font-size: 0.9rem;">Increased capacity: 32 neurons in first hidden layer, then 16, then output.</p>
+            <pre><code>
+model = Sequential()
+model.add(Dense(32, activation='relu', input_shape=(X_train.shape[1],)))
+model.add(Dense(16, activation='relu'))  # additional hidden layer
+model.add(Dense(1))  # output layer
+
+model.compile(optimizer='adam', loss='mse', metrics=['mae'])
+            </code></pre>
+        </div>
+
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">3. Updated Anvil Deployment (Best Model)</h4>
+            <p style="margin-bottom: 10px; font-size: 0.9rem;">Exposes the best-performing model to Anvil for web app predictions.</p>
+            <pre><code>
+import anvil.server
+
+anvil.server.connect("YOUR_SERVER_KEY")
+
+@anvil.server.callable
+def predict_house_price(rm, lstat, ptratio):
+    sample_input = np.array([[rm, lstat, ptratio]])
+    sample_scaled = scaler.transform(sample_input)
+    predicted_price = best_model.predict(sample_scaled)
+    return float(predicted_price[0][0] * 1000)
+
+anvil.server.wait_forever()
+            </code></pre>
+        </div>
+    </div>
+
+    <div class="slide-section">
+        <h3>📊 Evaluation Metrics & Comparison</h3>
+        
+        <div style="overflow-x: auto; margin-bottom: 20px;">
+            <table style="width:100%; border-collapse: collapse; background: var(--bg-cream); border: 2px solid var(--text-dark);">
+                <thead>
+                    <tr style="background: var(--text-dark); color: white;">
+                        <th style="padding: 10px; border: 1px solid #ddd;">Model</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">MAE</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">MSE</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">RMSE</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">R²</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="background: #e8f4e8;">
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Original Model</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>2.42</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>15.94</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>3.99</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>0.78</strong></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid #ddd;">Original + Early Stopping</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">2.62</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">18.02</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">4.24</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">0.75</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid #ddd;">Early Stopping + Additional Hidden Layer</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">2.73</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">17.41</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">4.17</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">0.76</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <p><strong>Key Observations:</strong></p>
+        <ul>
+            <li><strong>Original Model (Best):</strong> Lowest MAE (2.42), MSE (15.94), RMSE (3.99), and highest R² (0.78). Had optimal parameter combination.</li>
+            <li><strong>Early Stopping Only (Weakest):</strong> Highest errors (MAE 2.62, RMSE 4.24, R² 0.75). Relied solely on early stopping without ideal fit parameters.</li>
+            <li><strong>Early Stopping + Hidden Layer (Second Best):</strong> Improved over early stopping-only (R² 0.76) due to increased learning capacity, but slightly worse than original due to added complexity.</li>
+        </ul>
+        <p><strong>Winner:</strong> Original Model — deployed to Anvil web app.</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>📸 Visualizations</h3>
+    
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark);">
+                <img src="assets/images/project_screenshots/project8/metrics_visualization_model1.jpg" alt="MAE, MSE, RMSE Comparison" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;">MAE, MSE, RMSE Comparison Across Three Models</p>
+            </div>
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark);">
+                <img src="assets/images/project_screenshots/project8/metrics_visualization_model2.jpg" alt="R² Score Comparison" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;">R² Score: Original (0.78) vs Early Stopping (0.75) vs Hidden Layer (0.76)</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-section">
+        <h3>📸 Web App Screenshots (Updated with Best Model)</h3>
+        
+        <div style="margin-bottom: 15px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">Homepage</h4>
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark); margin-bottom: 20px;">
+                <img src="assets/images/project_screenshots/project8/homepage.jpg" alt="Anvil Web App Homepage" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;">Anvil Web App Interface with input fields for RM, LSTAT, PTRATIO</p>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">Entry 1: High Value Area</h4>
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark); margin-bottom: 20px;">
+                <img src="assets/images/project_screenshots/project8/high_value.jpg" alt="High Value Area Prediction" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;">Inputs: RM=7.6, LSTAT=3.8, PTRATIO=14.5 → Predicted Price: ~$42,000 (High value area, 40-48 range)</p>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">Entry 2: Mid-Range Area</h4>
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark); margin-bottom: 20px;">
+                <img src="assets/images/project_screenshots/project8/mid_value.jpg" alt="Mid-Range Area Prediction" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;">Inputs: RM=6.3, LSTAT=11.5, PTRATIO=18.0 → Predicted Price: ~$22,500 (Mid-range area, 20-25 range)</p>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">Entry 3: Lower Value Area</h4>
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark); margin-bottom: 20px;">
+                <img src="assets/images/project_screenshots/project8/low_value.jpg" alt="Lower Value Area Prediction" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;">Inputs: RM=5.5, LSTAT=22.0, PTRATIO=20.5 → Predicted Price: ~$13,800 (Lower value area, 10-15 range)</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-section">
+        <h3>🛠️ Tools & Technologies</h3>
+        <ul>
+            <li><strong>Programming Language:</strong> Python 3.x</li>
+            <li><strong>Development Environment:</strong> Google Colab</li>
+            <li><strong>Deep Learning:</strong> TensorFlow / Keras (Sequential, Dense, EarlyStopping)</li>
+            <li><strong>Data Handling:</strong> Pandas, NumPy, Scikit-learn</li>
+            <li><strong>Visualization:</strong> Matplotlib</li>
+            <li><strong>Deployment:</strong> Anvil.works (updated with best model)</li>
+        </ul>
+    </div>
+
+    <div class="slide-section">
+        <h3>🧩 Challenges & Solutions</h3>
+        <p><strong>Challenge 1:</strong> Early stopping alone produced worse metrics (R² 0.75) than original model (R² 0.78).</p>
+        <p><strong>Solution:</strong> Recognized that early stopping without matching original parameters (batch_size, verbose) affects learning. Added hidden layer to compensate.</p>
+        
+        <p><strong>Challenge 2:</strong> Additional hidden layer improved over early stopping-only (R² 0.76) but still didn't beat original.</p>
+        <p><strong>Solution:</strong> Concluded original architecture (16→8→1) with full epoch training was optimal for this dataset. Documented as finding.</p>
+        
+        <p><strong>Challenge 3:</strong> Updating Anvil web app with best model without breaking existing functionality.</p>
+        <p><strong>Solution:</strong> Retrained original model with fixed random seed, reconnected Anvil server, tested all three prediction samples.</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>🧠 Learning Reflection</h3>
+        <p><strong>What I learned:</strong> Early stopping prevents overfitting but may stop prematurely if validation loss fluctuates. Adding hidden layers increases model capacity but can introduce unnecessary complexity if the dataset isn't large/complex enough. The original model (16→8→1, 300 epochs) performed best because its architecture matched the dataset's complexity and had optimal training parameters.</p>
+        <p><strong>Skills gained:</strong> Implementing EarlyStopping callbacks in Keras, modifying neural network architectures (adding layers), comparing models systematically using MAE/MSE/RMSE/R², and deploying the best-performing model to Anvil with updated predictions.</p>
+        <p><strong>References:</strong> TensorFlow/Keras documentation on EarlyStopping; Project 8 instructions from PTF04.</p>
+    </div>
+</body>
+</html>

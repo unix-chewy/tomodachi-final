@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+    <div class="slide-section">
+        <h3>📖 Project Overview</h3>
+        <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-top: 10px; margin-bottom: 10px;">Linear Regression - Plant Growth</h4>
+        <p><strong>Brief Description:</strong> This project explores the application of a Linear Regression model to analyze the relationship between temperature and biological growth. Using a synthetic dataset that mimics real-world quadratic growth patterns, the model attempts to find the best linear fit to predict growth outcomes based on temperature inputs.</p>
+        <p><strong>Objectives / Purpose:</strong> The primary objective is to document and compile the completed project notebook into a PDF report. This includes organizing all code implementations, visualizations, and analytical findings into a single, well-formatted document suitable for submission, review, and future reference.</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>✨ Key Features</h3>
+        <ul>
+            <li><strong>Data Simulation:</strong> Utilizes NumPy to generate 500 temperature samples ranging from 0°C to 40°C, paired with growth data derived from a quadratic formula with Gaussian noise.</li>
+            <li><strong>Model Implementation:</strong> Employs the Scikit-learn <code>LinearRegression</code> class to fit a predictive line to the generated temperature-growth dataset.</li>
+            <li><strong>Quantitative Evaluation:</strong> Calculates and displays essential regression metrics including Mean Absolute Error (MAE), Mean Squared Error (MSE), Root Mean Squared Error (RMSE), and the R² Score.</li>
+            <li><strong>Visual Analysis:</strong> Includes a Matplotlib-based scatter plot that overlays the actual growth data with the model's linear prediction to visually highlight the fit.</li>
+        </ul>
+    </div>
+
+    <div class="slide-section">
+        <h3>💻 Important Code Blocks</h3>
+        
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">1. Data Generation & Formula</h4>
+            <p style="margin-bottom: 10px; font-size: 0.9rem;">This snippet defines the quadratic relationship between temperature and growth, serving as the ground truth for our experiment.</p>
+            <pre><code>
+temp = np.linspace(0, 40, 500)
+# Growth formula with noise: -0.1 * (temp - 25)^2 + 50
+growth = -0.1 * (temp - 25) ** 2 + 50 + np.random.normal(0, 5, size=temp.shape)
+temp = temp.reshape(-1, 1) # Reshaping for the model
+            </code></pre>
+        </div>
+
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">2. Training and Prediction</h4>
+            <p style="margin-bottom: 10px; font-size: 0.9rem;">The model is instantiated and fitted to the reshaped temperature data to generate growth predictions.</p>
+            <pre><code>
+model = LinearRegression()
+model.fit(temp, growth)
+
+# Generate predictions across the temperature range
+growth_pred = model.predict(temp)
+            </code></pre>
+        </div>
+    </div>
+
+    <div class="slide-section">
+        <h3>📸 Data Visualization</h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 15px;">
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark);">
+                <img src="assets/images/project_screenshots/project1/visualization.png" alt="Growth vs Temperature Linear Regression Plot" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;">Matplotlib visualization of Actual Growth vs. Linear Prediction</p>
+            </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 15px;">
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark);">
+                <img src="assets/images/project_screenshots/project1/metrics.jpg" alt="Performance Metrics" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;">Model Performance Metrics</p>
+        </div>
+        </div>
+    </div>
+
+    <div class="slide-section">
+        <h3>🛠️ Tools & Technologies</h3>
+        <ul>
+            <li><strong>Programming Language:</strong> Python 3.x</li>
+            <li><strong>Data Handling:</strong> NumPy (Array manipulation and math functions)</li>
+            <li><strong>Machine Learning:</strong> Scikit-learn (LinearRegression, Metrics)</li>
+            <li><strong>Visualization:</strong> Matplotlib (Scatter and Line plotting)</li>
+        </ul>
+    </div>
+
+    <div class="slide-section">
+        <h3>🧩 Challenges & Solutions</h3>
+        <p><strong>Challenge:</strong> Fitting a straight line to data that naturally follows a curve, leading to higher error margins in the extremas (0°C and 40°C).</p>
+        <p><strong>Solution:</strong> While Linear Regression provides a basic baseline, the evaluation metrics (specifically RMSE and R²) were used to quantify exactly how much variance the linear model failed to capture, providing a clear justification for moving toward polynomial regression in future iterations.</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>🧠 Learning Reflection</h3>
+        <p><strong>What I learned:</strong> This project provided practical insight into the assumptions of linear models. I learned how to interpret the R² score to determine if a linear fit is appropriate for a specific dataset and gained experience in the full cycle of data simulation, model fitting, and evaluation.</p>
+        <p><strong>Skills gained:</strong> Synthetic data generation and regression model evaluation (MAE/RMSE).</p>
+    </div>
+</body>
+</html>

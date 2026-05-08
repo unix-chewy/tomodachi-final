@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+    <div class="slide-section">
+        <h3>📖 Project Overview</h3>
+        <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-top: 10px; margin-bottom: 10px;">Boston House Price Prediction Model Deployment Using Streamlit</h4>
+        <p><strong>Brief Description:</strong> This project deploys the trained Boston House Price Prediction model as an interactive web application using Streamlit, an open-source Python framework for building data apps quickly. Users can input house features (RM, LSTAT, PTRATIO) and receive instant price predictions.</p>
+        <p><strong>Objectives / Purpose:</strong> The primary objective is to deploy the trained Boston House Price Prediction model as a Streamlit web application and capture a screenshot of the live app output as proof of successful deployment.</p>
+        <p><strong>Context Note:</strong> This project has a prerequisite: <strong>Midterm - Hands-on Long Quiz 1 (Boston House Price Prediction)</strong>, where the baseline Neural Network model was originally developed, trained, and evaluated. This current project builds upon that by deploying the trained model as a Streamlit web application.</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>✨ Key Features</h3>
+        <ul>
+            <li><strong>Streamlit Web App:</strong> Lightweight, fast-loading interface for house price predictions.</li>
+            <li><strong>Real-time Prediction:</strong> Instant price prediction displayed in thousands of dollars ($k).</li>
+            <li><strong>Clean UI:</strong> Simple, professional layout with clear labels and output display.</li>
+        </ul>
+    </div>
+
+    <div class="slide-section">
+        <h3>💻 Important Code Blocks</h3>
+        
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">Streamlit App Code</h4>
+            <p style="margin-bottom: 10px; font-size: 0.9rem;">The complete Streamlit application code that loads the trained model and creates the interactive interface.</p>
+            <pre><code>
+import streamlit as st
+import numpy as np
+import pickle
+from tensorflow.keras.models import load_model
+
+# Load trained model and scaler
+model = load_model('boston_housing_model.h5')
+scaler = pickle.load(open('scaler.pkl', 'rb'))
+
+st.title("Boston House Price Predictor")
+st.write("Enter the features below to predict the house price.")
+
+# Input sliders
+rm = st.slider("Average number of rooms (RM)", 3.0, 9.0, 7.5, 0.1)
+lstat = st.slider("% lower status population (LSTAT)", 0.0, 40.0, 5.0, 0.1)
+ptratio = st.slider("Pupil:Teacher ratio (PTRATIO)", 10.0, 25.0, 12.0, 0.1)
+
+if st.button("Predict Price"):
+    input_data = np.array([[rm, lstat, ptratio]])
+    input_scaled = scaler.transform(input_data)
+    prediction = model.predict(input_scaled)
+    price_k = prediction[0][0]
+    st.success(f"Predicted House Price: ${price_k:.2f}k")
+            </code></pre>
+        </div>
+    </div>
+
+    <div class="slide-section">
+        <h3>📸 Screenshot / Visuals</h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 15px;">
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark);">
+                <img src="assets/images/project_screenshots/project9/deployment.jpg" alt="Streamlit Boston House Price Predictor App" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;">Streamlit Web App Output: RM=7.50, LSTAT=5.00, PTRATIO=12.00 → Predicted Price: $41.66k</p>
+            </div>
+        </div>
+        <p style="margin-top: 15px; font-size: 0.85rem; text-align: center; font-style: italic;">Screenshot shows the deployed Streamlit app with input sliders and prediction output.</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>🛠️ Tools & Technologies</h3>
+        <ul>
+            <li><strong>Deployment Framework:</strong> Streamlit (open-source Python app framework)</li>
+            <li><strong>Model:</strong> TensorFlow / Keras Neural Network (trained previously)</li>
+            <li><strong>Preprocessing:</strong> Scikit-learn StandardScaler (pickled for reuse)</li>
+            <li><strong>Input UI:</strong> Streamlit sliders for interactive user input</li>
+            <li><strong>Language:</strong> Python 3.x</li>
+        </ul>
+    </div>
+
+    <div class="slide-section">
+        <h3>🧩 Challenges & Solutions</h3>
+        <p><strong>Challenge:</strong> Ensuring the trained model and scaler are properly loaded in the Streamlit environment.</p>
+        <p><strong>Solution:</strong> Saved the model as .h5 file and scaler as .pkl file, then loaded them at app startup.</p>
+        
+        <p><strong>Challenge:</strong> Displaying the output in a readable format (thousands of dollars).</p>
+        <p><strong>Solution:</strong> Formatted the prediction as ${price:.2f}k to clearly indicate thousands of dollars.</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>🧠 Learning Reflection</h3>
+        <p><strong>What I learned:</strong> Streamlit provides a remarkably simple way to deploy machine learning models as web applications without needing HTML, CSS, or JavaScript. The framework handles UI elements (sliders, buttons, text outputs) with minimal code, making it ideal for rapid prototyping and sharing models with non-technical stakeholders.</p>
+        <p><strong>Skills gained:</strong> Building Streamlit apps, loading saved models (.h5) and scalers (.pkl) in a deployment environment, creating interactive sliders for user input, and formatting prediction outputs for clear communication.</p>
+    </div>
+</body>
+</html>

@@ -6,6 +6,8 @@ let lastScrollTime = 0;
 let isAnimating = false;
 let scrollVelocity = 0;
 let momentum = 0;
+let isMusicPlaying = false; // ADD THIS
+
 const TOTAL_PROJECTS = 18;
 const VISIBLE_COUNT = 5;
 const CARD_HEIGHT = 73;
@@ -21,7 +23,7 @@ const SMOOTHING = 0.85;
     { index: 16, src: 'assets/images/avatar_smile_left.png' },    // Projects 17-18
 ]*/;
 
-// ===== 16 Project Data =====
+// ===== 18 Project Data =====
 const allProjects = [
     { id: 'project1', title: 'Midterms Hands-on Exercise 1', arcana: '📊 Regression', file: 'projects/project1.html', color: '#ffb3ba' },
     { id: 'project2', title: 'Midterms Hands-on Exercise 2', arcana: '🧠 Neural Net', file: 'projects/project2.html', color: '#bae1ff' },
@@ -34,7 +36,7 @@ const allProjects = [
     { id: 'project9', title: 'Finals Hands-on Exercise 1', arcana: '🖥️ Streamlit', file: 'projects/project9.html', color: '#baffc9' },
     { id: 'project10', title: 'Finals Hands-on Exercise 2', arcana: '🧠 CNN', file: 'projects/project10.html', color: '#ffd93d' },
     { id: 'project11', title: 'Finals Lab Exercise 3', arcana: '📈 CNN Optimization', file: 'projects/project11.html', color: '#d4b8ff' },
-    { id: 'project12', title: 'Finals Lab Exercise 4', arcana: '🎯 CNN Visualization', file: 'projects/project12.html', color: '#ffd5b8' },
+    { id: 'project12', title: 'Finals Lab Exercise 4', arcana: '🎯 Test Time!', file: 'projects/project12.html', color: '#ffd5b8' },
     { id: 'project13', title: 'Finals Lab Exercise 5', arcana: '🐕🐈 Binary Classification', file: 'projects/project13.html', color: '#ffb3ba' },
     { id: 'project14', title: 'Finals Lab Exercise 6', arcana: '⚡ Flask', file: 'projects/project14.html', color: '#bae1ff' },
     { id: 'project15', title: 'Finals Lab Exercise 7', arcana: '🌐 Streamlit', file: 'projects/project15.html', color: '#baffc9' },
@@ -91,8 +93,8 @@ function playSplashIntro() {
         if (startBtn) {
             startBtn.style.opacity = '1';
             startBtn.style.pointerEvents = 'auto';
-            startBtn.style.animation = 'fadeInUp 0.6s ease forwards';
-            console.log('✅ START button should now be visible');
+            startBtn.classList.add('pop-up');
+            console.log('✅ START button popped up!');
         } else {
             console.error('❌ START button not found!');
         }
@@ -101,13 +103,24 @@ function playSplashIntro() {
     window.splashIntro = splashIntro;
 }
 
+// ===== START SITE =====
 function startSite() {
     const splash = document.getElementById('splash-screen');
     const main = document.getElementById('main-app');
 
     renderProjects();
 
-    splash.style.transform = 'translateY(-100vh)';
+    // Play magical chime sound effect
+    const chime = new Audio('assets/music/chime_intro.m4a'); // Changed to chime_intro.mp3
+    chime.volume = 0.5;
+    chime.play();
+
+    // ZOOM OUT TRANSITION - 3 seconds to match the sound
+    splash.style.transition = 'all 3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+    splash.style.transform = 'scale(1.5) rotate(3deg)';
+    splash.style.opacity = '0';
+
+    // Hide the splash screen after 3 seconds (when sound fades)
     setTimeout(() => {
         splash.style.display = 'none';
         main.style.display = 'block';
@@ -116,45 +129,67 @@ function startSite() {
             window.splashIntro.currentTime = 0;
         }
         playBackgroundMusic();
-    }, 800);
+    }, 3000);
 }
 
+// ===== BACKGROUND MUSIC =====
 function playBackgroundMusic() {
-    bgMusic = new Audio('assets/music/background.mp3');
-    bgMusic.loop = true;
-    bgMusic.volume = 0.3;
-
+    if (!bgMusic) {
+        bgMusic = new Audio('assets/music/background.mp3');
+        bgMusic.loop = true;
+        bgMusic.volume = 0.3;
+    }
+    
     bgMusic.play().catch(error => {
-        console.log('Audio play failed:', error);
+        console.log('Background music play failed:', error);
     });
-
+    
+    isMusicPlaying = true;
+    document.getElementById('music-icon').textContent = '🔊';
     window.bgMusic = bgMusic;
 }
 
+// ===== TOGGLE MUSIC =====
 function toggleMusic() {
-    if (window.bgMusic) {
-        if (window.bgMusic.paused) {
-            window.bgMusic.play();
-            document.getElementById('music-icon').textContent = '🔊';
-            const mii = document.getElementById('main-mii');
-            mii.classList.remove('dance');
-            void mii.offsetWidth;
-            mii.classList.add('dance');
-
-            const bubble = document.getElementById('mii-speech');
-            bubble.textContent = '"🎵 Music makes me dance!"';
-            setTimeout(() => {
-                bubble.textContent = '"Pick a project!"';
-            }, 3000);
-        } else {
-            window.bgMusic.pause();
-            document.getElementById('music-icon').textContent = '🔇';
-            const mii = document.getElementById('main-mii');
-            mii.classList.remove('dance');
-        }
+    if (!bgMusic) {
+        // If music hasn't been initialized yet, create it
+        bgMusic = new Audio('assets/music/background.mp3');
+        bgMusic.loop = true;
+        bgMusic.volume = 0.3;
+        window.bgMusic = bgMusic;
+    }
+    
+    if (bgMusic.paused) {
+        bgMusic.play().catch(error => {
+            console.log('Music play failed:', error);
+        });
+        document.getElementById('music-icon').textContent = '🔊';
+        isMusicPlaying = true;
+        
+        // Add dance animation to Mii
+        const mii = document.getElementById('main-mii');
+        mii.classList.remove('dance');
+        void mii.offsetWidth;
+        mii.classList.add('dance');
+        
+        // Update speech bubble
+        const bubble = document.getElementById('mii-speech');
+        bubble.textContent = '"🎵 Music makes me dance!"';
+        setTimeout(() => {
+            bubble.textContent = '"Pick a project!"';
+        }, 3000);
+    } else {
+        bgMusic.pause();
+        document.getElementById('music-icon').textContent = '🔇';
+        isMusicPlaying = false;
+        
+        // Remove dance animation
+        const mii = document.getElementById('main-mii');
+        mii.classList.remove('dance');
     }
 }
 
+// ===== RENDER PROJECTS =====
 function renderProjects() {
     const list = document.getElementById('project-list');
     list.innerHTML = '';
@@ -185,6 +220,7 @@ function renderProjects() {
     attachCardEvents();
 }
 
+// ===== UPDATE WHEEL POSITION =====
 function updateWheelPosition(index, animate = true) {
     const list = document.getElementById('project-list');
     const cards = document.querySelectorAll('.project-card');
@@ -235,49 +271,13 @@ function updateWheelPosition(index, animate = true) {
         }
     });
 
-    // ===== SMOOTH 3-SPIN AVATAR CHANGE =====
-    /*const mii = document.getElementById('main-mii');
-
-    let selectedAvatar = 'assets/images/avatar_smile_left.png';
-    for (const entry of avatarCycle) {
-        if (index >= entry.index) {
-            selectedAvatar = entry.src;
-        }
-    }
-
-    if (mii.src !== selectedAvatar) {
-        mii.style.transition = 'transform 1.2s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease';
-        mii.style.transform = 'rotateY(1080deg) scale(0.85)';
-        mii.style.opacity = '0.4';
-
-        setTimeout(() => {
-            mii.src = selectedAvatar;
-            mii.style.opacity = '1';
-            mii.style.transform = 'rotateY(1080deg) scale(1)';
-        }, 600);
-
-        setTimeout(() => {
-            mii.style.transition = 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
-            mii.style.transform = 'rotateY(1080deg) scale(1)';
-        }, 1200);
-
-        setTimeout(() => {
-            mii.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
-            mii.style.transform = 'rotateY(1080deg) scale(1)';
-        }, 1500);
-
-        mii.classList.add('changing');
-        setTimeout(() => {
-            mii.classList.remove('changing');
-        }, 1500);
-    } */
-
     const startNum = index + 1;
     const endNum = Math.min(index + VISIBLE_COUNT, TOTAL_PROJECTS);
     document.getElementById('project-counter').textContent = 
         `${String(startNum).padStart(2, '0')}-${String(endNum).padStart(2, '0')} / ${TOTAL_PROJECTS}`;
 }
 
+// ===== ATTACH CARD EVENTS =====
 function attachCardEvents() {
     document.querySelectorAll('.project-card').forEach(card => {
         card.removeEventListener('click', cardClickHandler);
@@ -318,6 +318,7 @@ function attachCardEvents() {
     });
 }
 
+// ===== CARD CLICK HANDLER =====
 function cardClickHandler() {
     const title = this.querySelector('.card-title').textContent;
     const project = allProjects.find(p => p.title === title);
@@ -326,9 +327,17 @@ function cardClickHandler() {
     }
 }
 
+// ===== WHEEL EVENT =====
 document.addEventListener('wheel', function(e) {
     const mainApp = document.getElementById('main-app');
     if (mainApp.style.display === 'none') return;
+
+    const projectList = document.getElementById('project-list');
+    const rect = projectList.getBoundingClientRect();
+    const isOverList = e.clientX >= rect.left && e.clientX <= rect.right &&
+                       e.clientY >= rect.top && e.clientY <= rect.bottom;
+
+    if (!isOverList) return;
 
     e.preventDefault();
 
@@ -345,6 +354,7 @@ document.addEventListener('wheel', function(e) {
     scrollVelocity = delta * 0.5;
 }, { passive: false });
 
+// ===== SCROLL PROJECTS =====
 function scrollProjects(direction) {
     if (isAnimating) return;
     isAnimating = true;
@@ -356,6 +366,7 @@ function scrollProjects(direction) {
     }, 500);
 }
 
+// ===== MII REACT =====
 function miiReact(direction) {
     const mii = document.getElementById('main-mii');
     mii.classList.remove('wave');
@@ -369,6 +380,7 @@ function miiReact(direction) {
     }, 1500);
 }
 
+// ===== OPEN PROJECT =====
 async function openProject(htmlPath, title) {
     const slide = document.getElementById('project-slide');
     const slideTitle = document.getElementById('slide-title');
@@ -414,6 +426,7 @@ async function openProject(htmlPath, title) {
     }
 }
 
+// ===== CLOSE PROJECT =====
 function closeProject() {
     const slide = document.getElementById('project-slide');
     slide.classList.remove('open');
@@ -427,6 +440,7 @@ function closeProject() {
     }, 500);
 }
 
+// ===== KEYBOARD EVENTS =====
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') closeProject();
     if (event.key === 'ArrowUp') scrollProjects(-1);
@@ -440,19 +454,6 @@ document.addEventListener('keydown', function(event) {
 document.getElementById('project-slide').addEventListener('click', function(e) {
     if (e.target === this) closeProject();
 });
-
-// document.addEventListener('mousemove', function(e) {
-//     const mii = document.getElementById('main-mii');
-//     const rect = mii.getBoundingClientRect();
-//     const miiX = rect.left + rect.width / 2;
-//     const miiY = rect.top + rect.height / 2;
-// 
-//     const angle = Math.atan2(e.clientY - miiY, e.clientX - miiX);
-//     const degrees = angle * (180 / Math.PI);
-// 
-//     let limitedDegrees = Math.max(-15, Math.min(15, degrees * 0.15));
-//     mii.style.transform = `rotate(${limitedDegrees}deg)`;
-// });
 
 // ===== MOUSE TRACER - NO GSAP, PURE CSS =====
 const cursor = document.getElementById("cursor");

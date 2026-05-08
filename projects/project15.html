@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+    <div class="slide-section">
+        <h3>📖 Project Overview</h3>
+        <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-top: 10px; margin-bottom: 10px;">Web App using CIFAR-10</h4>
+        <p><strong>Brief Description:</strong> This project deploys the trained CIFAR-10 CNN model as a web application, allowing users to upload images and receive real-time classification predictions across all 10 classes (airplane, automobile, bird, cat, deer, dog, frog, horse, ship, truck).</p>
+        <p><strong>Objectives / Purpose:</strong> The primary objective is to demonstrate the deployed CIFAR-10 web app's multi-class classification capability by correctly predicting all 10 classes (airplane, automobile, bird, cat, deer, dog, frog, horse, ship, truck) and capturing screenshots as proof of accurate performance.</p>
+        <p><strong>Context Note:</strong> This web app deployment is connected to <strong>Finals - Hands-on Exercise 2 (CIFAR-10 CNN Model Summary, Training and Accuracy)</strong>, where the baseline CNN model was trained and evaluated.</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>✨ Key Features</h3>
+        <ul>
+            <li><strong>10-Class Classification:</strong> Model predicts all CIFAR-10 categories.</li>
+            <li><strong>Image Upload Interface:</strong> Users can upload custom images for classification.</li>
+            <li><strong>Real-time Prediction:</strong> Instant class label and confidence score displayed.</li>
+            <li><strong>Web App Deployment:</strong> Flask-based interface for easy access.</li>
+        </ul>
+    </div>
+
+    <div class="slide-section">
+        <h3>📸 Screenshots / Visuals</h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 15px;">
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark);">
+                <img src="assets/images/project_screenshots/project15/airplane.jpg" alt="CIFAR-10 Web App Prediction 1" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;"><strong>Sample Prediction 1:</strong> airplane correctly identified</p>
+            </div>
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark);">
+                <img src="assets/images/project_screenshots/project15/deer.jpg" alt="CIFAR-10 Web App Prediction 2" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;"><strong>Sample Prediction 2:</strong> deer correctly identified</p>
+            </div>
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark);">
+                <img src="assets/images/project_screenshots/project15/horse.jpg" alt="CIFAR-10 Web App Prediction 3" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;"><strong>Sample Prediction 3:</strong> horse correctly identified</p>
+            </div>
+        </div>
+        <p style="margin-top: 15px; font-size: 0.85rem; text-align: center; font-style: italic;">Screenshots show the web app correctly classifying images from the CIFAR-10 dataset across different classes.</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>🛠️ Tools & Technologies</h3>
+        <ul>
+            <li><strong>Web Framework:</strong> Streamlit</li>
+            <li><strong>Deep Learning Model:</strong> TensorFlow / Keras CNN (from Exercise 2)</li>
+            <li><strong>Image Processing:</strong> PIL, NumPy</li>
+            <li><strong>Frontend:</strong> HTML, CSS</li>
+        </ul>
+    </div>
+
+    <div class="slide-section">
+        <h3>🧠 Learning Reflection</h3>
+        <p><strong>What I learned:</strong> This activity demonstrated how to deploy a multi-class image classifier as a web application. The model successfully identifies all 10 CIFAR-10 classes with reasonable accuracy, showcasing the practical application of CNNs beyond the notebook environment.</p>
+        <p><strong>Skills gained:</strong> Deploying multi-class classification models, handling image uploads in streamlit, displaying predictions with confidence scores, and testing model performance across all classes.</p>
+        <p><strong>Requirement met:</strong> ✅ Uploaded screenshots showing correct predictions for CIFAR-10 classes via web app.</p>
+    </div>
+</body>
+</html>

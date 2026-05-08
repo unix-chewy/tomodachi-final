@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+    <div class="slide-section">
+        <h3>📖 Project Overview</h3>
+        <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-top: 10px; margin-bottom: 10px;">CIFAR-10 CNN model Summary, Training and Accuracy</h4>
+        <p><strong>Brief Description:</strong> This project involves building a Convolutional Neural Network (CNN) to classify images from the CIFAR-10 dataset. The goal is to document the model architecture, training process, and accuracy results as a foundation for improving performance for the upcoming activities.</p>
+        <p><strong>Objectives / Purpose:</strong> The primary objective is to build a Convolutional Neural Network (CNN) for CIFAR-10 image classification, document the model architecture summary, capture the training output over multiple epochs, and report the final test accuracy as a baseline for future model improvements</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>✨ Key Features</h3>
+        <ul>
+            <li><strong>CNN Architecture:</strong> 4 convolutional layers (32→32→64→64 filters) with MaxPooling and Dropout.</li>
+            <li><strong>Data Normalization:</strong> Pixel values scaled to [0,1] for faster convergence.</li>
+            <li><strong>Training:</strong> 20 epochs with Adam optimizer (learning rate 0.0005).</li>
+            <li><strong>Model Summary:</strong> Complete layer-by-layer architecture with trainable parameters.</li>
+            <li><strong>Test Accuracy:</strong> Baseline accuracy recorded for future comparison.</li>
+        </ul>
+    </div>
+
+    <div class="slide-section">
+        <h3>💻 Important Code Blocks</h3>
+        
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">1. CNN Model Definition</h4>
+            <p style="margin-bottom: 10px; font-size: 0.9rem;">Baseline CNN architecture for CIFAR-10 classification.</p>
+            <pre><code>
+model = tf.keras.models.Sequential()
+model.add(Conv2D(32, 3, padding="same", activation="relu", input_shape=[32, 32, 3]))
+model.add(Conv2D(32, 3, padding="same", activation="relu"))
+model.add(MaxPool2D(pool_size=2, strides=2))
+model.add(Conv2D(64, 3, padding="same", activation="relu"))
+model.add(Dropout(0.2))
+model.add(Conv2D(64, 3, padding="same", activation="relu"))
+model.add(MaxPool2D(pool_size=2, strides=2))
+model.add(Flatten())
+model.add(Dense(128, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(10, activation='softmax'))
+            </code></pre>
+        </div>
+
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">2. Model Compilation & Training</h4>
+            <pre><code>
+optimizer = tf.keras.optimizers.Adam(learning_rate=0.0005)
+model.compile(loss="sparse_categorical_crossentropy",
+              optimizer=optimizer, 
+              metrics=["sparse_categorical_accuracy"])
+model.fit(X_train, y_train, epochs=20)
+            </code></pre>
+        </div>
+
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">3. Model Evaluation</h4>
+            <pre><code>
+test_loss, test_accuracy = model.evaluate(X_test, y_test)
+print("Test accuracy: {}".format(test_accuracy))
+            </code></pre>
+        </div>
+    </div>
+
+    <div class="slide-section">
+        <h3>📸 Screenshot / Visuals</h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 15px;">
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark);">
+                <img src="assets/images/project_screenshots/project10/model_summary.jpg" alt="CIFAR-10 CNN Model Summary" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;">Model Summary: CNN Architecture with Layer Names, Output Shapes, and Parameters</p>
+            </div>
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark);">
+                <img src="assets/images/project_screenshots/project10/training_accuracy.jpg" alt="CIFAR-10 Training Output" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;">Model training and Accuracy</p>
+            </div>
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark);">
+                <img src="assets/images/project_screenshots/project10/output.png" alt="CIFAR-10 Test Accuracy" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;">Model sample output</p>
+            </div>
+        </div>
+        <p style="margin-top: 15px; font-size: 0.85rem; text-align: center; font-style: italic;">Screenshot shows model summary, training progress, and final test accuracy.</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>🛠️ Tools & Technologies</h3>
+        <ul>
+            <li><strong>Programming Language:</strong> Python 3.x</li>
+            <li><strong>Development Environment:</strong> Google Colab</li>
+            <li><strong>Deep Learning:</strong> TensorFlow / Keras (Conv2D, MaxPool2D, Dropout, Dense, Flatten)</li>
+            <li><strong>Dataset:</strong> CIFAR-10 (50,000 training, 10,000 test images)</li>
+            <li><strong>Visualization:</strong> Matplotlib</li>
+        </ul>
+    </div>
+
+    <div class="slide-section">
+        <h3>🧠 Learning Reflection</h3>
+        <p><strong>What I learned:</strong> This exercise established a baseline CNN model for CIFAR-10 classification. I learned how to interpret the model summary (layer outputs, parameter counts), monitor training progress (loss/accuracy per epoch), and evaluate final test accuracy. This baseline is essential for measuring improvements in the next exercise.</p>
+        <p><strong>Skills gained:</strong> Building CNNs in Keras, understanding model.summary() output, training on image data, evaluating test accuracy, and documenting results for comparison.</p>
+        <p><strong>Next Steps (Lab Exercise 3):</strong> Apply optimizations such as data augmentation, batch normalization, learning rate scheduling, increased epochs, or architecture changes to achieve higher accuracy than the baseline.</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+    <div class="slide-section">
+        <h3>📖 Project Overview</h3>
+        <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-top: 10px; margin-bottom: 10px;">Boston House Price Prediction</h4>
+        <p><strong>Brief Description:</strong> This project implements a Neural Network regression model to predict house prices using the Boston Housing dataset. As a Junior Data Scientist for a real estate development company, the goal is to identify key features influencing house prices and build a deployable prediction model. The model was trained in Google Colab and is prepared for full-stack deployment via Anvil.works.</p>
+        <p><strong>Objectives / Purpose:</strong> Identify 3 most relevant features using correlation heatmap, build a simple NN with Keras/TensorFlow, train/evaluate the model, and deploy as a web app where users input feature values to get real-time price predictions.</p>
+        <p><strong>Context Note:</strong> This project serves as the foundation for <strong>Midterm - Hands-on Quiz 1 (House Price Prediction)</strong>, where the model will be deployed as a fully functional web application using Anvil.works.</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>✨ Key Features</h3>
+        <ul>
+            <li><strong>Feature Selection via Correlation Heatmap:</strong> Used seaborn heatmap to identify top 3 features correlated with house price (Istat, ptraito, indus).</li>
+            <li><strong>Neural Network Architecture:</strong> 3 layers — Dense(16, ReLU), Dense(8, ReLU), Dense(1) output layer.</li>
+            <li><strong>Feature Scaling:</strong> StandardScaler applied to normalize input features before training.</li>
+            <li><strong>Training Analysis:</strong> Compared loss values at 100 epochs (Train: 15.43, Val: 20.59) vs 300 epochs (Train: 13.31, Val: 18.21).</li>
+            <li><strong>Anvil Deployment Ready:</strong> Model designed to be connected to Anvil.works web app with form inputs for 3 features. Deployment to be completed in Midterm - Hands-on Quiz 1.</li>
+        </ul>
+    </div>
+
+    <div class="slide-section">
+        <h3>💻 Important Code Blocks</h3>
+        
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">1. Correlation Heatmap for Feature Selection</h4>
+            <p style="margin-bottom: 10px; font-size: 0.9rem;">Creates correlation matrix and heatmap to identify features most strongly correlated with house price (PRICE).</p>
+            <pre><code>
+corr = df.corr()
+plt.figure(figsize=(12,10))
+sns.heatmap(corr, cmap='coolwarm', annot=True, fmt=".2f")
+plt.title('Feature Correlation Heatmap')
+corr['price'].sort_values(ascending=False)
+            </code></pre>
+            <p style="font-size: 0.9rem;">Selected features: Feature 1: Istat, Feature 2: ptraito, Feature 3: indus</p>
+        </div>
+
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">2. Neural Network Model Definition</h4>
+            <p style="margin-bottom: 10px; font-size: 0.9rem;">Sequential model with 2 hidden layers (16 and 8 neurons, ReLU activation) and output layer for regression.</p>
+            <pre><code>
+model = Sequential()
+model.add(Dense(16, activation='relu', input_shape=(X_train.shape[1],)))
+model.add(Dense(8, activation='relu'))
+model.add(Dense(1))
+model.compile(optimizer='adam', loss='mse')
+            </code></pre>
+        </div>
+
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">3. Model Training with Validation Split</h4>
+            <p style="margin-bottom: 10px; font-size: 0.9rem;">Trains model for 100 epochs (extended to 300 for comparison) with 20% validation split.</p>
+            <pre><code>
+history = model.fit(
+    X_train, y_train,
+    validation_split=0.2,
+    epochs=100,
+    batch_size=16,
+    verbose=1
+)
+# After 100th epoch: Training loss: 15.43, Validation loss: 20.59
+# After 300th epoch: Training loss: 13.31, Validation loss: 18.21
+            </code></pre>
+        </div>
+
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">4. Single Prediction</h4>
+            <p style="margin-bottom: 10px; font-size: 0.9rem;">Example prediction output: $21,355,422 (scaled output).</p>
+            <pre><code>
+sample_input = scaler.transform([[feature1, feature2, feature3]])
+predicted_price = model.predict(sample_input)
+# Sample output: array([[21.355423]], dtype=float32)
+            </code></pre>
+        </div>
+
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">5. Anvil Deployment Preparation (For Midterm - Hands-on Quiz 1)</h4>
+            <p style="margin-bottom: 10px; font-size: 0.9rem;">Code structure for connecting trained model to Anvil web app.</p>
+            <pre><code>
+import anvil.server
+anvil.server.connect("YOUR_ANVIL_SERVER_KEY")
+
+@anvil.server.callable
+def predict_price(feature1, feature2, feature3):
+    scaled_input = scaler.transform([[feature1, feature2, feature3]])
+    prediction = model.predict(scaled_input)
+    return float(prediction[0][0])
+
+anvil.server.wait_forever()
+            </code></pre>
+            <p style="font-size: 0.9rem;">This will be connected to an Anvil form with three input fields displaying the predicted house price.</p>
+        </div>
+    </div>
+
+    <div class="slide-section">
+        <h3>📸 Screenshots / Visuals</h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 15px;">
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark);">
+                <img src="assets/images/project_screenshots/project7/feature_correlation_map.png" alt="Feature Correlation Heatmap" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;">Correlation Heatmap: Features vs. PRICE</p>
+            </div>
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark);">
+                <img src="assets/images/project_screenshots/project7/loss.png" alt="Training vs Validation Loss" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;">Training vs Validation Loss over 100 Epochs</p>
+            </div>
+        </div>
+        <p style="margin-top: 15px; font-size: 0.85rem; text-align: center; font-style: italic;">Note: Web app deployment screenshots will be added in Midterm - Hands-on Quiz 1 (House Price Prediction).</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>🛠️ Tools & Technologies</h3>
+        <ul>
+            <li><strong>Programming Language:</strong> Python 3.x</li>
+            <li><strong>Development Environment:</strong> Google Colab</li>
+            <li><strong>Data Handling:</strong> Pandas, NumPy</li>
+            <li><strong>Visualization:</strong> Matplotlib, Seaborn</li>
+            <li><strong>Machine Learning:</strong> Scikit-learn (train_test_split, StandardScaler, metrics)</li>
+            <li><strong>Deep Learning:</strong> TensorFlow / Keras (Sequential, Dense)</li>
+            <li><strong>Deployment Platform (for Hands-on Quiz 1):</strong> Anvil.works</li>
+        </ul>
+    </div>
+
+    <div class="slide-section">
+        <h3>🧩 Challenges & Solutions</h3>
+        <p><strong>Challenge 1:</strong> Raw features not scaled — Neural Networks are sensitive to input magnitude differences.</p>
+        <p><strong>Solution:</strong> Applied StandardScaler to normalize all features (mean=0, std=1) before training.</p>
+        <p><strong>Challenge 2:</strong> Determining optimal number of epochs — validation loss started increasing after certain point (overfitting).</p>
+        <p><strong>Solution:</strong> Compared 100 epochs (Train loss: 15.43, Val loss: 20.59) vs 300 epochs (Train: 13.31, Val: 18.21). While both decrease, plotting loss curves helps detect overfitting visually.</p>
+        <p><strong>Upcoming Challenge (Hands-on Quiz 1):</strong> Deploying model to Anvil.works as a functional web app.</p>
+        <p><strong>Planned Solution:</strong> Use anvil.server.callable decorator to expose prediction function, create form with three input fields, and display prediction output.</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>🧠 Learning Reflection</h3>
+        <p><strong>What I learned:</strong> This project reinforced the end-to-end ML pipeline: exploratory data analysis (correlation heatmaps), feature selection, preprocessing (scaling), neural network design with Keras, training with validation splits, and deployment preparation. I learned that more epochs don't always guarantee better generalization — monitoring validation loss is critical to avoid overfitting.</p>
+        <p><strong>Skills gained:</strong> Interpreting correlation matrices for feature selection, building regression neural networks (not just classification), scaling features with StandardScaler, analyzing training/validation loss curves, and preparing models for full-stack deployment with Anvil.works.</p>
+        <p><strong>Next Steps (Midterm - Hands-on Quiz 1):</strong> Deploy this model as a web app on Anvil.works with:</p>
+        <ul>
+            <li>Form inputs for Feature 1 (Istat), Feature 2 (ptraito), Feature 3 (indus)</li>
+            <li>Connect Colab notebook to Anvil using server module</li>
+            <li>Display predicted house price dynamically</li>
+        </ul>
+    </div>
+</body>
+</html>

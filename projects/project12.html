@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+    <div class="slide-section">
+        <h3>📖 Project Overview</h3>
+        <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-top: 10px; margin-bottom: 10px;">CIFAR-10 3 Images Predicted Correctly</h4>
+        <p><strong>Brief Description:</strong> This activity tests the trained CIFAR-10 CNN model on three custom images (airplane, bird, frog) to evaluate its real-world prediction performance. The model successfully classified all three images with high confidence scores.</p>
+        <p><strong>Objectives / Purpose:</strong> The primary objective is to test the trained CIFAR-10 CNN model on three external images, successfully classify each image correctly, and capture screenshots showing the predictions with confidence scores.</p>
+        <p><strong>Context Note:</strong> This activity is an extended task from <strong>CIFAR-10 CNN activities (Finals - Hands-on Exercise 2 and Lab Exercise 3)</strong>, where the model was originally developed and trained.</p>
+
+    </div>
+
+    <div class="slide-section">
+        <h3>✨ Key Features</h3>
+        <ul>
+            <li><strong>Custom Image Testing:</strong> Model tested on 3 external images: airplane.jpg, bird.jpg, frog.jpg.</li>
+            <li><strong>Correct Predictions:</strong> All 3 images were classified correctly.</li>
+            <li><strong>High Confidence Scores:</strong>
+                <ul>
+                    <li>Bird: 89.03%</li>
+                    <li>Airplane: 99.99%</li>
+                    <li>Frog: 90.29%</li>
+                </ul>
+            </li>
+            <li><strong>Preprocessing Pipeline:</strong> Images resized to 32x32, normalized to [0,1], and batched for prediction.</li>
+        </ul>
+    </div>
+
+    <div class="slide-section">
+        <h3>💻 Important Code Blocks</h3>
+        
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">Custom Image Loading & Preprocessing</h4>
+            <p style="margin-bottom: 10px; font-size: 0.9rem;">Loading external images and preparing them for model prediction.</p>
+            <pre><code>
+from PIL import Image
+
+image_filenames = ['/content/airplane.jpg', '/content/bird.jpg', '/content/frog.jpg']
+new_images = []
+for filename in image_filenames:
+    img = Image.open(filename)
+    img_resized = img.resize((32, 32))
+    img_array = tf.keras.preprocessing.image.img_to_array(img_resized)
+    img_array = img_array / 255.0
+    img_array = np.expand_dims(img_array, axis=0)
+    preprocessed_images.append(img_array)
+            </code></pre>
+        </div>
+
+        <div style="margin-bottom: 25px;">
+            <h4 style="font-family: 'Fredoka One', sans-serif; color: var(--text-dark); margin-bottom: 8px;">Batch Prediction & Confidence Display</h4>
+            <p style="margin-bottom: 10px; font-size: 0.9rem;">Running predictions and displaying class names with confidence percentages.</p>
+            <pre><code>
+batch_images = np.vstack(preprocessed_images)
+predictions = model.predict(batch_images)
+
+for i, pred in enumerate(predictions):
+    predicted_class_index = np.argmax(pred)
+    predicted_class_name = class_names[predicted_class_index]
+    confidence = np.max(pred) * 100
+    print(f"Pred: {predicted_class_name}\nConf: {confidence:.2f}%")
+            </code></pre>
+        </div>
+    </div>
+
+    <div class="slide-section">
+        <h3>📸 Screenshot / Visuals</h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 15px;">
+            <div style="background: var(--bg-cream); border-radius: 12px; padding: 15px; border: 2px solid var(--text-dark);">
+                <img src="assets/images/project_screenshots/project12/output.jpg" alt="CIFAR-10 Predictions Output" style="width:100%; border-radius: 8px;">
+                <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;">Prediction Results: Bird (89.03%), Airplane (99.99%), Frog (90.29%)</p>
+            </div>
+        </div>
+        <p style="margin-top: 15px; font-size: 0.85rem; text-align: center; font-style: italic;">Screenshot shows 3 images correctly predicted with confidence scores: Bird (89.03%), Airplane (99.99%), Frog (90.29%).</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>🛠️ Tools & Technologies</h3>
+        <ul>
+            <li><strong>Programming Language:</strong> Python 3.x</li>
+            <li><strong>Development Environment:</strong> Google Colab</li>
+            <li><strong>Image Processing:</strong> PIL (Pillow), NumPy</li>
+            <li><strong>Deep Learning:</strong> TensorFlow / Keras (trained CNN model)</li>
+            <li><strong>Dataset Classes:</strong> CIFAR-10 class names (airplane, bird, frog, etc.)</li>
+        </ul>
+    </div>
+
+    <div class="slide-section">
+        <h3>🧩 Challenges & Solutions</h3>
+        <p><strong>Challenge:</strong> Images needed to be normalized to [0,1] range like the training data.</p>
+        <p><strong>Solution:</strong> Divided pixel arrays by 255.0 after converting to numpy arrays.</p>
+    </div>
+
+    <div class="slide-section">
+        <h3>🧠 Learning Reflection</h3>
+        <p><strong>What I learned:</strong> This activity demonstrated that the trained CNN model generalizes well to new, unseen images of the same classes. The high confidence scores (89-100%) indicate the model has learned meaningful features for airplanes, birds, and frogs. Preprocessing (resizing and normalization) is critical for correct predictions—any mismatch with training data preprocessing will lead to poor results.</p>
+        <p><strong>Skills gained:</strong> Loading external images in Colab, preprocessing images for CNN input, batching multiple images for prediction, extracting confidence scores from softmax outputs, and visualizing results.</p>
+    </div>
+</body>
+</html>
