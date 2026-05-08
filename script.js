@@ -724,3 +724,17 @@ trashBin.addEventListener('drop', function(e) {
         draggedItem = null;
     }
 });
+
+// Add this to your script.js at the end
+function updateSpeechBubble() {
+    const bubble = document.getElementById('mii-speech');
+    if (window.innerHeight < 850) {
+        bubble.textContent = '"Drag a face onto me!"';
+    } else {
+        bubble.textContent = '"Pick a project!"';
+    }
+}
+
+// Run on load and resize
+window.addEventListener('resize', updateSpeechBubble);
+updateSpeechBubble();
