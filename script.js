@@ -13,13 +13,13 @@ const CONTAINER_HEIGHT = 450;
 const SMOOTHING = 0.85;
 
 // ===== AVATAR CYCLE CONFIGURATION =====
-const avatarCycle = [
+/*const avatarCycle = [
     { index: 0, src: 'assets/images/avatar_smile_left.png' },    // Projects 1-4
     { index: 4, src: 'assets/images/avatar_smile_wink_left.png' }, // Projects 5-8
     { index: 8, src: 'assets/images/avatar_smile_left.png' },    // Projects 9-12
     { index: 12, src: 'assets/images/avatar_smile_wink_left.png' }, // Projects 13-16
     { index: 16, src: 'assets/images/avatar_smile_left.png' },    // Projects 17-18
-];
+]*/;
 
 // ===== 16 Project Data =====
 const allProjects = [
@@ -236,7 +236,7 @@ function updateWheelPosition(index, animate = true) {
     });
 
     // ===== SMOOTH 3-SPIN AVATAR CHANGE =====
-    const mii = document.getElementById('main-mii');
+    /*const mii = document.getElementById('main-mii');
 
     let selectedAvatar = 'assets/images/avatar_smile_left.png';
     for (const entry of avatarCycle) {
@@ -270,7 +270,7 @@ function updateWheelPosition(index, animate = true) {
         setTimeout(() => {
             mii.classList.remove('changing');
         }, 1500);
-    }
+    } */
 
     const startNum = index + 1;
     const endNum = Math.min(index + VISIBLE_COUNT, TOTAL_PROJECTS);
@@ -441,18 +441,18 @@ document.getElementById('project-slide').addEventListener('click', function(e) {
     if (e.target === this) closeProject();
 });
 
-document.addEventListener('mousemove', function(e) {
-    const mii = document.getElementById('main-mii');
-    const rect = mii.getBoundingClientRect();
-    const miiX = rect.left + rect.width / 2;
-    const miiY = rect.top + rect.height / 2;
-
-    const angle = Math.atan2(e.clientY - miiY, e.clientX - miiX);
-    const degrees = angle * (180 / Math.PI);
-
-    let limitedDegrees = Math.max(-15, Math.min(15, degrees * 0.15));
-    mii.style.transform = `rotate(${limitedDegrees}deg)`;
-});
+// document.addEventListener('mousemove', function(e) {
+//     const mii = document.getElementById('main-mii');
+//     const rect = mii.getBoundingClientRect();
+//     const miiX = rect.left + rect.width / 2;
+//     const miiY = rect.top + rect.height / 2;
+// 
+//     const angle = Math.atan2(e.clientY - miiY, e.clientX - miiX);
+//     const degrees = angle * (180 / Math.PI);
+// 
+//     let limitedDegrees = Math.max(-15, Math.min(15, degrees * 0.15));
+//     mii.style.transform = `rotate(${limitedDegrees}deg)`;
+// });
 
 // ===== MOUSE TRACER - NO GSAP, PURE CSS =====
 const cursor = document.getElementById("cursor");
@@ -566,3 +566,160 @@ const onTouchMove = () => {
 
 // ===== START THE TRACER =====
 initTracer();
+
+// ===== FACE PAINT DRAG & DROP =====
+let draggedItem = null;
+let isFromPalette = false;
+
+// --- Make palette items draggable ---
+document.querySelectorAll('.palette-item').forEach(item => {
+    item.addEventListener('dragstart', function(e) {
+        draggedItem = this;
+        isFromPalette = true;
+        this.style.opacity = '0.5';
+        e.dataTransfer.setData('text/plain', JSON.stringify({
+            src: this.dataset.src,
+            type: this.dataset.type,
+            fromPalette: true
+        }));
+    });
+    
+    item.addEventListener('dragend', function() {
+        this.style.opacity = '1';
+        if (!isFromPalette) {
+            draggedItem = null;
+        }
+        isFromPalette = false;
+    });
+});
+
+// --- Make dropped items draggable for repositioning ---
+function makeDroppedItemDraggable(element) {
+    element.addEventListener('dragstart', function(e) {
+        draggedItem = this;
+        isFromPalette = false;
+        this.style.opacity = '0.5';
+        e.dataTransfer.setData('text/plain', JSON.stringify({
+            src: this.src,
+            type: this.dataset.type,
+            id: this.dataset.id,
+            fromPalette: false
+        }));
+    });
+    
+    element.addEventListener('dragend', function() {
+        this.style.opacity = '1';
+        if (!isFromPalette) {
+            draggedItem = null;
+        }
+        isFromPalette = false;
+    });
+}
+
+// --- Drop zone events ---
+const dropZone = document.getElementById('mii-drop-zone');
+const droppedElements = document.getElementById('dropped-elements');
+let itemCounter = 0;
+
+dropZone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    this.classList.add('drag-over');
+});
+
+dropZone.addEventListener('dragleave', function(e) {
+    this.classList.remove('drag-over');
+});
+
+dropZone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    this.classList.remove('drag-over');
+    
+    const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+    
+    if (data.fromPalette) {
+        const droppedItem = document.createElement('img');
+        droppedItem.src = data.src;
+        droppedItem.className = 'dropped-item';
+        droppedItem.draggable = true;
+        droppedItem.dataset.type = data.type;
+        droppedItem.dataset.id = `item-${itemCounter++}`;
+        
+        // Determine size based on type
+        let size = 80; // default for individual parts
+        if (data.type === 'face' || data.src.includes('roblox') || data.src.includes('face')) {
+            size = 180; // 👈 YOUR CHOSEN SIZE
+        } else if (data.type === 'eye') {
+            size = 65;
+        } else if (data.type === 'mouth') {
+            size = 55;
+        } else if (data.type === 'hair') {
+            size = 120;
+        } else if (data.type === 'accessory') {
+            size = 60;
+        }
+        
+        droppedItem.style.width = `${size}px`;
+        droppedItem.style.height = `${size}px`;
+        
+        // Calculate offset for centering (half of size)
+        const offset = size / 2;
+        
+        // Position at drop point with correct offset
+        const rect = this.getBoundingClientRect();
+        const x = e.clientX - rect.left - offset;
+        const y = e.clientY - rect.top - offset;
+        
+        droppedItem.style.left = `${Math.max(0, Math.min(100, x / rect.width * 100))}%`;
+        droppedItem.style.top = `${Math.max(0, Math.min(100, y / rect.height * 100))}%`;
+        
+        // Add remove button
+        const removeBtn = document.createElement('div');
+        removeBtn.className = 'remove-btn';
+        removeBtn.textContent = '✕';
+        removeBtn.onclick = function(e) {
+            e.stopPropagation();
+            droppedItem.remove();
+        };
+        droppedItem.appendChild(removeBtn);
+        
+        // Make it draggable for repositioning
+        makeDroppedItemDraggable(droppedItem);
+        
+        droppedElements.appendChild(droppedItem);
+    } else {
+        // If this is an existing item, just move it (reposition)
+        if (draggedItem) {
+            const rect = this.getBoundingClientRect();
+            const size = parseInt(draggedItem.style.width);
+            const offset = size / 2;
+            const x = e.clientX - rect.left - offset;
+            const y = e.clientY - rect.top - offset;
+            
+            draggedItem.style.left = `${Math.max(0, Math.min(100, x / rect.width * 100))}%`;
+            draggedItem.style.top = `${Math.max(0, Math.min(100, y / rect.height * 100))}%`;
+        }
+    }
+});
+
+// --- Trash Bin ---
+const trashBin = document.getElementById('trash-bin');
+
+trashBin.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    this.classList.add('drag-over');
+});
+
+trashBin.addEventListener('dragleave', function(e) {
+    this.classList.remove('drag-over');
+});
+
+trashBin.addEventListener('drop', function(e) {
+    e.preventDefault();
+    this.classList.remove('drag-over');
+    
+    // Remove the dragged item
+    if (draggedItem) {
+        draggedItem.remove();
+        draggedItem = null;
+    }
+});
