@@ -4,6 +4,10 @@
 
 > **Final Project for PTF04**  
 > *A playful, interactive portfolio website for the stuffs I made in PTF04!!!.*
+---
+
+## 📖 Note
+I'm sorry I added assets and cluterred html project files in the repo hihi, idk where to host images.
 
 ---
 
@@ -22,6 +26,8 @@ This is deployed in tomofolio.netlify.app
 3. Click **"▶ Play!"** on the splash screen
 4. Wait 8 seconds for the **START** button to appear
 5. Click **"▶ START"** to enter the main app
+
+---
 
 ## Github Repo
 https://github.com/unix-chewy/tomofolio.git
