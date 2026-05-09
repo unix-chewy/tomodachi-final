@@ -14,7 +14,7 @@ const CARD_HEIGHT = 73;
 const CONTAINER_HEIGHT = 450;
 const SMOOTHING = 0.85;
 
-// ===== AVATAR CYCLE CONFIGURATION =====
+// ===== AVATAR CYCLE CONFIGURATION (DISREGARD, USE ONE MII NALANG) =====
 /*const avatarCycle = [
     { index: 0, src: 'assets/images/avatar_smile_left.png' },    // Projects 1-4
     { index: 4, src: 'assets/images/avatar_smile_wink_left.png' }, // Projects 5-8
@@ -111,7 +111,7 @@ function startSite() {
     renderProjects();
 
     // Play magical chime sound effect
-    const chime = new Audio('assets/music/chime_intro.m4a'); // Changed to chime_intro.mp3
+    const chime = new Audio('assets/music/chime_intro.m4a');
     chime.volume = 0.5;
     chime.play();
 
@@ -189,6 +189,19 @@ function toggleMusic() {
     }
 }
 
+// ===== HOVER SOUND EFFECT (DISREGARD, CAN'T USE THIS SA BROWSER)=====
+/* const hoverSound = new Audio('assets/music/hover.mp3');
+hoverSound.volume = 0.3; // Adjust volume as needed
+
+// Add hover sound to all project cards
+document.querySelectorAll('.project-card').forEach(card => {
+    card.addEventListener('mouseenter', function() {
+        // Reset and play sound
+        hoverSound.currentTime = 0;
+        hoverSound.play().catch(e => console.log('Hover sound play failed:', e));
+    });
+}); */
+
 // ===== RENDER PROJECTS =====
 function renderProjects() {
     const list = document.getElementById('project-list');
@@ -226,19 +239,15 @@ function updateWheelPosition(index, animate = true) {
     const cards = document.querySelectorAll('.project-card');
     const listContainer = document.querySelector('.menu-list-container');
     
-    // Get the container height
     const containerHeight = listContainer.clientHeight || CONTAINER_HEIGHT;
     
-    // Calculate the center position of the container
     const centerPosition = containerHeight / 2;
     
-    // Calculate the position of the selected card offset
-    // We want the selected card to be at the center of the container
+
     const selectedCardHeight = CARD_HEIGHT;
     const gap = 12; // gap between cards
     const totalCardHeight = selectedCardHeight + gap;
     
-    // The target position puts the selected card at the center
     const targetPosition = centerPosition - (selectedCardHeight / 2) - (index * totalCardHeight);
     
     // Apply the transform
@@ -250,7 +259,6 @@ function updateWheelPosition(index, animate = true) {
     
     list.style.transform = `translateY(${targetPosition}px)`;
     
-    // Update card styles (same as before)
     cards.forEach((card, i) => {
         const distance = Math.abs(i - index);
         card.style.transition = 'all 0.4s cubic-bezier(0.22, 1, 0.36, 1)';
@@ -286,7 +294,6 @@ function updateWheelPosition(index, animate = true) {
         }
     });
 
-    // Update counter
     const startNum = index + 1;
     const endNum = Math.min(index + VISIBLE_COUNT, TOTAL_PROJECTS);
     document.getElementById('project-counter').textContent = 
@@ -741,7 +748,6 @@ trashBin.addEventListener('drop', function(e) {
     }
 });
 
-// Add this to your script.js at the end
 function updateSpeechBubble() {
     const bubble = document.getElementById('mii-speech');
     if (window.innerHeight < 850) {
@@ -754,3 +760,147 @@ function updateSpeechBubble() {
 // Run on load and resize
 window.addEventListener('resize', updateSpeechBubble);
 updateSpeechBubble();
+
+// ===== TEXT RESOLVER FOR HOMEPAGE =====
+const resolver = {
+  resolve: function resolve(options, callback) {
+    const resolveString = options.resolveString || options.element.getAttribute('data-target-resolver');
+    const combinedOptions = Object.assign({}, options, {resolveString: resolveString});
+    
+    function getRandomInteger(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    
+    function randomCharacter(characters) {
+      return characters[getRandomInteger(0, characters.length - 1)];
+    }
+    
+    function doRandomiserEffect(options, callback) {
+      const characters = options.characters;
+      const timeout = options.timeout;
+      const element = options.element;
+      const partialString = options.partialString;
+      let iterations = options.iterations;
+
+      setTimeout(() => {
+        if (iterations >= 0) {
+          const nextOptions = Object.assign({}, options, {iterations: iterations - 1});
+          if (iterations === 0) {
+            element.textContent = partialString;
+          } else {
+            element.textContent = partialString.substring(0, partialString.length - 1) + randomCharacter(characters);
+          }
+          doRandomiserEffect(nextOptions, callback);
+        } else if (typeof callback === "function") {
+          callback(); 
+        }
+      }, options.timeout);
+    }
+    
+    function doResolverEffect(options, callback) {
+      const resolveString = options.resolveString;
+      const characters = options.characters;
+      const offset = options.offset;
+      const partialString = resolveString.substring(0, offset);
+      const combinedOptions = Object.assign({}, options, {partialString: partialString});
+
+      doRandomiserEffect(combinedOptions, () => {
+        const nextOptions = Object.assign({}, options, {offset: offset + 1});
+        if (offset <= resolveString.length) {
+          doResolverEffect(nextOptions, callback);
+        } else if (typeof callback === "function") {
+          callback();
+        }
+      });
+    }
+
+    doResolverEffect(combinedOptions, callback);
+  } 
+};
+
+// ===== HOMEPAGE MESSAGES =====
+const homepageMessages = [
+    'Explore my projects',
+    'Drag & drop to customize',
+    'Every project tells a story',
+    'Made with ♥ and code',
+    'Joney Island welcomes you',
+    'Ready to discover something new?'
+];
+
+let homepageMessageIndex = 0;
+const resolverElement = document.querySelector('[data-target-resolver]');
+
+if (resolverElement) {
+    const resolverOptions = {
+        offset: 0,
+        timeout: 10,
+        iterations: 10,
+        characters: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'x', 'y', 'x', '#', '%', '&', '-', '+', '_', '?', '/', '\\', '='],
+        resolveString: homepageMessages[homepageMessageIndex],
+        element: resolverElement
+    };
+
+    function homepageResolverCallback() {
+        setTimeout(() => {
+            homepageMessageIndex++;
+            if (homepageMessageIndex >= homepageMessages.length) {
+                homepageMessageIndex = 0;
+            }
+            const nextOptions = Object.assign({}, resolverOptions, {
+                resolveString: homepageMessages[homepageMessageIndex]
+            });
+            resolver.resolve(nextOptions, homepageResolverCallback);
+        }, 2000);
+    }
+
+    resolver.resolve(resolverOptions, homepageResolverCallback);
+}
+
+// ===== DISABLE MOUSE TRACER ON PALETTE SCROLL =====
+const palette = document.querySelector('.face-paint-palette');
+
+if (palette) {
+    // Disable tracer when scrolling the palette
+    palette.addEventListener('scroll', function() {
+        document.getElementById('cursor').style.display = 'none';
+    });
+
+    // Re-enable when scrolling stops
+    let scrollTimeout;
+    palette.addEventListener('scroll', function() {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+            document.getElementById('cursor').style.display = 'block';
+        }, 300);
+    });
+
+    // Also disable on mouse enter/leave
+    palette.addEventListener('mouseenter', function() {
+        document.getElementById('cursor').style.display = 'none';
+    });
+
+    palette.addEventListener('mouseleave', function() {
+        document.getElementById('cursor').style.display = 'block';
+    });
+}
+
+// ===== DISABLE TRACER ON INTERACTIVE ELEMENTS =====
+const interactiveElements = document.querySelectorAll(
+    'button, .palette-item, .project-card, .music-control, .play-btn, .start-btn, .scroll-arrow, .slide-close-btn, .trash-bin, .dropped-item'
+);
+const cursorEl = document.getElementById('cursor');
+
+if (interactiveElements.length > 0 && cursorEl) {
+    interactiveElements.forEach(el => {
+        // Hide tracer on hover
+        el.addEventListener('mouseenter', function() {
+            cursorEl.style.display = 'none';
+        });
+        
+        // Show tracer on leave
+        el.addEventListener('mouseleave', function() {
+            cursorEl.style.display = 'block';
+        });
+    });
+}

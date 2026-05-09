@@ -1,13 +1,21 @@
-/* RESET & TYPOGRAPHY */
+/* ============================================================
+   RESET & TYPOGRAPHY
+   ============================================================ */
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { 
-    font-family: 'Quicksand', sans-serif; 
-    overflow: hidden; 
-    height: 100vh; 
-    background: linear-gradient(145deg, #fcf3d9 0%, #f5e6ca 100%);
+
+body {
+    font-family: 'Quicksand', sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    background: 
+        url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"),
+        linear-gradient(145deg, #fff8ee 0%, #f5e6d3 100%);
+    background-size: 150px 150px, cover;
 }
 
-/* ===== COLORS ===== */
+/* ============================================================
+   COLORS
+   ============================================================ */
 :root {
     --bg-cream: #fcf3d9;
     --card-pink: #ffb3ba;
@@ -25,7 +33,9 @@ body {
     --card-lavender: #e6d4f5;
 }
 
-/* ===== FLOATING PARTICLES ===== */
+/* ============================================================
+   FLOATING PARTICLES
+   ============================================================ */
 .floating-particle {
     position: fixed;
     width: 6px;
@@ -44,7 +54,9 @@ body {
     100% { transform: translateY(-10vh) scale(1); opacity: 0; }
 }
 
-/* ===== HOMEPAGE / STUDENT PROFILE ===== */
+/* ============================================================
+   HOMEPAGE / STUDENT PROFILE
+   ============================================================ */
 .homepage-section {
     position: relative;
     width: 100%;
@@ -79,7 +91,6 @@ body {
     box-shadow: 12px 12px 0 var(--shadow-color);
 }
 
-/* ---- P5 Corner Detail ---- */
 .p5-corner {
     position: absolute;
     bottom: 15px;
@@ -96,7 +107,6 @@ body {
     to { transform: rotate(360deg); }
 }
 
-/* ---- Left: Mii Side ---- */
 .p5-mii-side {
     flex: 0 0 200px;
     display: flex;
@@ -133,7 +143,6 @@ body {
     opacity: 0.5;
 }
 
-/* ---- Right: Info Side ---- */
 .p5-info-side {
     flex: 1;
     padding: 30px 35px 25px 25px;
@@ -184,7 +193,6 @@ body {
     color: var(--accent-pink);
 }
 
-/* ---- Navigation ---- */
 .p5-nav {
     display: flex;
     gap: 12px;
@@ -213,15 +221,9 @@ body {
     box-shadow: 5px 5px 0 var(--shadow-color);
 }
 
-.nav-icon {
-    font-size: 1rem;
-}
+.nav-icon { font-size: 1rem; }
+.nav-text { text-transform: uppercase; }
 
-.nav-text {
-    text-transform: uppercase;
-}
-
-/* ---- Responsive ---- */
 @media (max-width: 768px) {
     .p5-card {
         flex-direction: column;
@@ -256,11 +258,16 @@ body {
     }
 }
 
-/* ===== SPLASH SCREEN ===== */
+/* ============================================================
+   SPLASH SCREEN
+   ============================================================ */
 #splash-screen {
-    position: fixed; top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background-image: url('assets/images/splash_screen/background.png');
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url('assets/images/splash_screen/background.jpg');
     background-size: cover;
     background-position: center;
     display: flex;
@@ -270,7 +277,6 @@ body {
     transition: all 3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* ===== CLICK TO START OVERLAY ===== */
 #click-overlay {
     position: absolute;
     top: 0;
@@ -328,7 +334,6 @@ body {
     opacity: 0.6;
 }
 
-/* ===== SPLASH CONTENT (hidden initially) ===== */
 #splash-content {
     opacity: 0;
     transition: opacity 0.5s ease;
@@ -349,32 +354,25 @@ body {
         gap: 18px;
         padding-bottom: 20px;
     }
-
     .splash-logo {
         width: clamp(520px, 70vw, 620px);
     }
-
     .splash-avatar {
         width: clamp(300px, 42vw, 380px);
         left: clamp(-140px, -12vw, -90px);
         top: 0;
     }
-
     .splash-tag {
         width: clamp(210px, 28vw, 260px);
         top: clamp(70px, 10vw, 90px);
         left: clamp(70px, 10vw, 90px);
     }
-
     .start-btn {
         padding: 14px 40px;
         font-size: 1.9rem;
     }
 }
 
-
-
-/* ===== LOGO CONTAINER ===== */
 .logo-container {
     position: relative;
     display: inline-block;
@@ -420,7 +418,6 @@ body {
     100% { opacity: 1; transform: scale(1) rotate(0deg); }
 }
 
-/* ===== START BUTTON ===== */
 .start-btn {
     background: var(--accent-yellow);
     border: 3px solid var(--text-dark);
@@ -455,20 +452,61 @@ body {
     100% { opacity: 1; transform: scale(1) rotate(0deg); }
 }
 
-/* ===== MAIN UI ===== */
+/* ============================================================
+   MAIN UI
+   ============================================================ */
 #main-app {
-    width: 100vw; height: 100vh;
-    background: transparent;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg-cream);
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(255, 107, 107, 0.15) 0%, transparent 60%),
+        radial-gradient(circle at 80% 20%, rgba(255, 217, 61, 0.15) 0%, transparent 60%),
+        radial-gradient(circle at 50% 80%, rgba(186, 225, 255, 0.15) 0%, transparent 60%);
     position: relative;
+}
+
+#main-app::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.05);
+    pointer-events: none;
+    z-index: -1;
+}
+
+.cozy-corner {
+    position: fixed;
+    font-size: 1.5rem;
+    color: rgba(74, 55, 40, 0.15);
+    pointer-events: none;
+    z-index: 10;
+}
+
+.cozy-corner.top-left {
+    top: 25px;
+    left: 25px;
+}
+
+.cozy-corner.bottom-right {
+    bottom: 25px;
+    right: 25px;
 }
 
 /* ===== SPLIT LAYOUT ===== */
 .split-container {
     display: flex;
     height: 100vh;
-    padding: 40px 60px;
-    gap: 40px;
+    padding: clamp(16px, 3vw, 40px) clamp(16px, 4vw, 60px);
+    gap: clamp(12px, 3vw, 40px);
     align-items: center;
+    border: 4px solid rgba(74, 55, 40, 0.08);
+    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(4px);
 }
 
 .split-left {
@@ -486,8 +524,8 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding: 20px 0;
-    gap: 12px;
+    padding: 10px 0 !important;
+    gap: 4px !important;
 }
 
 /* ===== MENU WRAPPER ===== */
@@ -565,8 +603,6 @@ body {
     position: relative;
     padding: 20px 10px 20px 30px;
     border-radius: 24px;
-    background: rgba(255,255,255,0.15);
-    backdrop-filter: blur(2px);
 }
 
 .menu-list-container::before {
@@ -597,6 +633,51 @@ body {
     padding-top: 0;
     padding-bottom: 0;
     width: 100%;
+}
+
+.menu-footer {
+    margin-top: 15px;
+    font-size: 0.7rem;
+    color: gray;
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: 1px;
+    transform: rotate(1deg);
+    padding: 10px;
+}
+
+.text-resolver-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 0;
+    margin-top: 4px;
+}
+
+.resolver-heading {
+    font-family: 'Fredoka One', sans-serif;
+    font-size: 1.2rem;
+    color: var(--text-dark);
+    text-align: center;
+    min-height: 2.5rem;
+    opacity: 0.7;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+    .resolver-heading {
+        font-size: 0.9rem;
+        min-height: 2rem;
+    }
+}
+
+@media (max-height: 850px) {
+    .resolver-heading {
+        font-size: 1rem;
+        min-height: 2rem;
+    }
 }
 
 /* ===== PROJECT CARDS ===== */
@@ -753,17 +834,6 @@ body {
 
 .project-card.center .card-status {
     transform: translateX(5px);
-}
-
-.menu-footer {
-    margin-top: 15px;
-    font-size: 0.7rem;
-    color: gray;
-    text-align: center;
-    font-weight: 700;
-    letter-spacing: 1px;
-    transform: rotate(1deg);
-    padding: 10px;
 }
 
 /* ===== SMALL INFO CARD ===== */
@@ -1018,6 +1088,36 @@ body {
     padding: 10px;
     border: 2px solid var(--text-dark);
     flex-shrink: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    cursor: grab;
+}
+
+.face-paint-palette:active {
+    cursor: grabbing;
+}
+
+.face-paint-palette .palette-item {
+    cursor: grab;
+}
+
+.face-paint-palette .palette-item:active {
+    cursor: grabbing;
+}
+
+.face-paint-palette::-webkit-scrollbar {
+    height: 4px;
+}
+
+.face-paint-palette::-webkit-scrollbar-thumb {
+    background: var(--accent-pink);
+    border-radius: 4px;
+}
+
+.face-paint-palette::-webkit-scrollbar-track {
+    background: rgba(74, 55, 40, 0.1);
+    border-radius: 4px;
 }
 
 .palette-label {
@@ -1029,13 +1129,14 @@ body {
 }
 
 .palette-items {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    display: flex;
+    flex-wrap: nowrap;
     gap: 6px;
-    justify-content: center;
+    width: max-content;
 }
 
 .palette-item {
+    flex-shrink: 0;
     width: 70px;
     height: 70px;
     border: 2px solid var(--text-dark);
@@ -1104,7 +1205,9 @@ body {
     transform: scale(1.1) rotate(10deg);
 }
 
-/* ===== SLIDE PANEL ===== */
+/* ============================================================
+   SLIDE PANEL
+   ============================================================ */
 .slide-panel {
     position: fixed;
     top: 0;
@@ -1160,14 +1263,12 @@ body {
     transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s;
 }
 
-/* Hover - only when not actively clicking */
 .slide-close-btn:hover:not(:active) {
     transform: scale(1.1) rotate(10deg) translateY(-2px);
     box-shadow: 0 8px 0 var(--text-dark);
     transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Click - takes priority */
 .slide-close-btn:active {
     transform: scale(0.92) translateY(4px) !important;
     box-shadow: 0 2px 0 var(--text-dark) !important;
@@ -1232,7 +1333,9 @@ body {
     border-left: 5px solid var(--accent-pink);
 }
 
-/* ===== DANCE ANIMATION ===== */
+/* ============================================================
+   DANCE ANIMATION
+   ============================================================ */
 @keyframes dance {
     0%, 100% { transform: rotate(-5deg) scale(1); }
     25% { transform: rotate(5deg) scale(1.05); }
@@ -1244,7 +1347,9 @@ body {
     animation: dance 0.8s ease-in-out infinite;
 }
 
-/* ===== MOUSE TRACER ===== */
+/* ============================================================
+   MOUSE TRACER
+   ============================================================ */
 .Cursor {
     pointer-events: none;
     position: fixed;
@@ -1285,11 +1390,9 @@ body {
     }
 }
 
-/* ===================================================== */
-/* ===== RESPONSIVE BREAKPOINTS (SMALLER SCREENS) ===== */
-/* ===================================================== */
-
-
+/* ============================================================
+   RESPONSIVE BREAKPOINTS (SMALLER SCREENS)
+   ============================================================ */
 
 /* Tablets (1024px and down) */
 @media (max-width: 1024px) {
@@ -1297,20 +1400,16 @@ body {
         padding: 30px 40px;
         gap: 30px;
     }
-    
     .split-left {
         flex: 0 0 50%;
     }
-    
     .split-right {
         flex: 0 0 50%;
         padding: 15px 10px;
     }
-    
     .menu-wrapper {
         height: 60vh;
     }
-    
     .menu-list-container {
         height: 350px;
     }
@@ -1325,14 +1424,12 @@ body {
         gap: 15px;
         align-items: stretch;
     }
-    
     .split-left {
         flex: none;
         width: 100%;
         height: 45vh;
         max-height: 45vh;
     }
-    
     .split-right {
         flex: none;
         width: 100%;
@@ -1341,65 +1438,53 @@ body {
         padding: 10px;
         gap: 12px;
     }
-    
     .menu-wrapper {
         height: 100%;
     }
-    
     .menu-list-container {
         height: 100%;
         max-height: 300px;
     }
-    
     .menu-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 8px;
         margin-bottom: 10px;
     }
-    
     .menu-header .header-text {
         font-size: 1.4rem;
         padding: 5px 20px;
     }
-    
     .scroll-indicator {
         gap: 10px;
         padding: 6px 12px;
         font-size: 0.8rem;
     }
-    
     .scroll-arrow {
         padding: 2px 8px;
     }
-    
     .card-title {
         font-size: 0.9rem;
     }
-    
     .project-card {
         height: 55px;
         padding: 10px 15px;
     }
-    
     .large-mii {
         width: 200px;
     }
-    
     .mii-drop-zone {
         width: 200px;
         height: 200px;
         margin: 0 auto;
         flex-shrink: 0;
     }
-    
     .mii-speech-bubble {
         font-size: 0.7rem;
         padding: 5px 12px;
         top: -20px;
         right: -20px;
     }
-    
     .info-card-small {
         max-width: 100%;
         width: 90%;
@@ -1407,25 +1492,20 @@ body {
         margin: 0 auto;
         flex-shrink: 0;
     }
-    
     .info-name {
         font-size: 1.4rem;
     }
-    
     .info-name .info-first {
         font-size: 0.9rem;
     }
-    
     .info-title {
         font-size: 0.6rem;
         margin-bottom: 3px;
     }
-    
     .info-intro {
         font-size: 0.7rem;
         line-height: 1.3;
     }
-    
     .face-paint-palette {
         max-width: 100%;
         width: 90%;
@@ -1433,22 +1513,18 @@ body {
         margin: 0 auto;
         flex-shrink: 0;
     }
-    
     .palette-label {
         font-size: 0.65rem;
         margin-bottom: 5px;
     }
-    
     .palette-item {
         width: 60px;
         height: 60px;
         padding: 2px;
     }
-    
     .palette-tag {
         font-size: 0.45rem;
     }
-    
     .trash-bin {
         max-width: 100%;
         width: 90%;
@@ -1457,11 +1533,9 @@ body {
         margin: 8px auto 20px;
         flex-shrink: 0;
     }
-    
     .trash-bin span {
         font-size: 1.2rem;
     }
-    
     .trash-bin p {
         font-size: 0.6rem;
     }
@@ -1473,41 +1547,33 @@ body {
         padding: 10px;
         gap: 10px;
     }
-    
     .split-left {
         height: 40vh;
     }
-    
     .split-right {
         max-height: calc(100vh - 55vh);
         padding: 8px;
         gap: 10px;
     }
-    
     .menu-header .header-text {
         font-size: 1.1rem;
         padding: 4px 15px;
     }
-    
     .scroll-indicator {
         gap: 8px;
         padding: 5px 10px;
         font-size: 0.7rem;
     }
-    
     .menu-list-container {
         padding: 10px;
     }
-    
     .project-card {
         height: 50px;
         padding: 8px 12px;
     }
-    
     .large-mii {
         width: 150px;
     }
-    
     .mii-drop-zone {
         width: 150px;
         height: 150px;
@@ -1515,14 +1581,12 @@ body {
         margin: 0 auto;
         flex-shrink: 0;
     }
-    
     .mii-speech-bubble {
         font-size: 0.6rem;
         padding: 4px 10px;
         top: -15px;
         right: -15px;
     }
-    
     .info-card-small {
         max-width: 100%;
         width: 90%;
@@ -1531,24 +1595,19 @@ body {
         margin: 0 auto;
         flex-shrink: 0;
     }
-    
     .info-name {
         font-size: 1.2rem;
     }
-    
     .info-name .info-first {
         font-size: 0.8rem;
     }
-    
     .info-title {
         font-size: 0.55rem;
         margin-bottom: 2px;
     }
-    
     .info-intro {
         font-size: 0.65rem;
     }
-    
     .face-paint-palette {
         max-width: 100%;
         width: 90%;
@@ -1556,22 +1615,18 @@ body {
         margin: 0 auto;
         flex-shrink: 0;
     }
-    
     .palette-label {
         font-size: 0.6rem;
     }
-    
     .palette-items {
         grid-template-columns: repeat(3, 1fr);
         gap: 4px;
     }
-    
     .palette-item {
         width: 50px;
         height: 50px;
         padding: 2px;
     }
-    
     .trash-bin {
         max-width: 100%;
         width: 90%;
@@ -1580,15 +1635,12 @@ body {
         margin: 8px auto 15px;
         flex-shrink: 0;
     }
-    
     .trash-bin span {
         font-size: 1rem;
     }
-    
     .trash-bin p {
         font-size: 0.55rem;
     }
-    
     .music-control {
         width: 40px;
         height: 40px;
@@ -1605,33 +1657,6 @@ body {
         height: auto;
         max-height: 100vh;
     }
-
-    /* Make palette horizontally scrollable */
-    .face-paint-palette {
-        overflow-x: auto;
-        overflow-y: hidden;
-        height: 82px;
-        max-width: 340px;
-        width: 100%;
-        padding: 6px !important;
-    }
-
-    .palette-label {
-        display: none !important;
-    }
-
-    .palette-items {
-        display: flex;
-        flex-wrap: nowrap;
-        gap: 6px;
-        width: max-content;
-    }
-
-    .palette-item {
-        flex-shrink: 0;
-        width: 70px;
-        height: 70px;
-    }
 }
 
 @media (max-height: 850px) {
@@ -1645,5 +1670,61 @@ body {
     #splash-content {
         transform: scale(0.65);
         transform-origin: center top;
+    }
+}
+
+/* ===== LAPTOP-SPECIFIC TUNING (1366×768) ===== */
+@media (max-width: 1440px) and (min-width: 1024px) {
+    .split-container {
+        padding: 20px 30px !important;
+        gap: 20px !important;
+    }
+    .menu-header .header-text {
+        font-size: 1.8rem !important;
+        padding: 4px 18px !important;
+    }
+    .project-card {
+        height: 58px !important;
+        padding: 8px 16px !important;
+    }
+    .card-title {
+        font-size: 0.95rem !important;
+    }
+    .large-mii {
+        width: 100% !important;
+        height: 100% !important;
+    }
+    .mii-drop-zone {
+        width: 350px !important;
+        height: 350px !important;
+    }
+}
+
+/* ===== DESKTOP: SAME LAYOUT AS 900px-AND-BELOW ===== */
+@media (min-height: 900px) {
+    .split-right {
+        gap: 4px !important;
+        justify-content: flex-start !important;
+        height: auto !important;
+    }
+    .large-mii-container {
+        flex-grow: 0 !important;
+        flex-shrink: 0 !important;
+    }
+    .mii-drop-zone {
+        width: 450px !important;
+        height: 450px !important;
+    }
+    .face-paint-palette {
+        margin-top: 0 !important;
+    }
+    .trash-bin {
+        margin-top: 4px !important;
+    }
+    .large-mii-container {
+        min-height: 0 !important;
+    }
+    .mii-drop-zone {
+        aspect-ratio: 1 / 1 !important;
     }
 }
